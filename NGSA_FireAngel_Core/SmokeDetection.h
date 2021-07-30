@@ -17,7 +17,7 @@ extern uint8_t pa2reg6data;
 extern uint8_t integ1Time;
 extern uint8_t integ2Time;
 
-void Photo_Integrate(uint8_t rxData);
+extern void Photo_Integrate(uint8_t rxData);
 void RunLoopTest(uint8_t rxData);
 void CreatePA1Settings(uint8_t rxData);
 void CreatePA2Settings(uint8_t rxData);

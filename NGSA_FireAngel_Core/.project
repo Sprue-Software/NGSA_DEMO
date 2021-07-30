@@ -349,6 +349,11 @@
 			<locationURI>STUDIO_SDK_LOC/platform/emdrv/spidrv/src/spidrv.c</locationURI>
 		</link>
 		<link>
+			<name>gecko_sdk_3.2.0/platform/emlib/init/gpio_simple/sl_emlib_gpio_simple_init.h</name>
+			<type>1</type>
+			<locationURI>STUDIO_SDK_LOC/platform/emlib/init/gpio_simple/sl_emlib_gpio_simple_init.h</locationURI>
+		</link>
+		<link>
 			<name>gecko_sdk_3.2.0/platform/micrium_os/common/include/common.h</name>
 			<type>1</type>
 			<locationURI>STUDIO_SDK_LOC/platform/micrium_os/common/include/common.h</locationURI>

@@ -17,10 +17,27 @@
 
 #ifndef NGSA_task_H
 #define NGSA_task_H
-
+#include "os.h"
 /***************************************************************************//**
  * Initialize  NGSA Thread
  ******************************************************************************/
 void NGSA_SYS_INIT(void);
-
+extern uint32_t read_val(void);
+extern void ADC_init(void);
+void init_AEF(void);
+extern void Stop_ADC(void);
+extern void __delay_ms(uint16_t time_ms_val);
+extern void SPI_Write(uint8_t add , uint8_t data);
+extern void Enable_SetLow(void);
+extern void Enable_SetLow(void);
+extern void COpolarization_SetHigh(void);
+extern void COpolarization_SetLow(void);
+/* ************* AFE***********************************************************/
+#define HEARTBEAT_ON     1U
+#define SMOKE_ON         1U
+#define CO_SENSING_ON    0u
+#define CO_TEST_ON      0u
+#define CO_AMP_ALWAYS_ON 0u
+#undef LED_BLINK
+//#define LED_BLINK 0
 #endif  // BLINK_H

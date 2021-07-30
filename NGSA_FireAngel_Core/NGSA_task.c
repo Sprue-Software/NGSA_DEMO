@@ -1,6 +1,12 @@
 /***************************************************************************//**
  * @file
- * @brief NGSA Demo 28 July 2021
+ * @brief NGSA Demo 28 July 2021:
+ * Main purpose of the Demo is to use of AFE for Smoke & LED, CO
+ * Used the AFE Pawel's code (i.e For PIC)
+ * Created thread to Run 10ms
+ * Added FG23 "SPI + ADC + GPIO (Enable, CO)"
+ * Provided wrapper Function to SPI_Write , ADC ,& Dealy functions
+ * Code is running fine , Observed SPI clock
  *******************************************************************************
  * # License
  * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
@@ -23,20 +29,17 @@
 #include "sl_sleeptimer.h"
 #include "SleepTests.h"
 #include "sl_udelay.h"
-extern uint32_t read_val(void);
-extern void ADC_init(void);
-void init_AEF(void);
-extern void __delay_ms(uint16_t time_ms_val);
-extern void SPI_Write(uint8_t add , uint8_t data);
-#define HEARTBEAT_ON     1U
-#define SMOKE_ON         1U
-#define CO_SENSING_ON    1U
-#define CO_TEST_ON       1U
-#define CO_AMP_ALWAYS_ON 1U
+#include "sl_emlib_gpio_init_Enable_PIN_config.h"
+#include "sl_emlib_gpio_init_CO_POL_config.h"
+#include "HeartBeatTests.h"
+#include "NGSA_task.h"
+#include "SmokeDetection.h"
+
 /*******************************************************************************
  *******************************   DEFINES   ***********************************
  ******************************************************************************/
 
+/********************************************************************************/
 #ifndef LED_INSTANCE
 #define LED_INSTANCE      sl_led_led0
 #endif
@@ -74,12 +77,13 @@ static char tx_buffer[APP_BUFFER_SIZE];
 
 #define NGSA_EXAMPLE_FLAG_TOGGLE    (OS_FLAGS) 0x0001
 OS_FLAG_GRP NGSAFlagGrp;
+
 // Semaphore to signal that transfer is complete
 static OS_SEM  tx_semaphore;
 uint32_t adc_read=0;
 static uint8_t heart_beat_ctr=0;
 static uint8_t smoke_ctr=0;
-
+static uint8_t CO_sensing_ctr=0;
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
  ******************************************************************************/
@@ -89,7 +93,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg);
 static void on_timeout_Diagnostic(sl_sleeptimer_timer_handle_t *handle, void *data);
 static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data);
 void transfer_callback(SPIDRV_HandleData_t *handle,Ecode_t transfer_status,int items_transferred);
-static void spidrv_app_task(void);
+
 /*******************************************************************************
  **************************   GLOBAL FUNCTIONS   *******************************
  ******************************************************************************/
@@ -119,15 +123,18 @@ void NGSA_SYS_INIT(void)
 }
 
 /***************************************************************************//**
- * Diagnostic task: every 60 second
+ * Diagnostic task: every 10 second
  ******************************************************************************/
 static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 {
   RTOS_ERR err;
   /* Calculate Delay  */
+#ifdef LED_BLINK
   uint32_t delay = sl_sleeptimer_ms_to_tick(180);
+#endif
+   /* Create semaphore for SPI */
   OSSemCreate(&tx_semaphore, "transfer semaphore", (OS_SEM_CTR)0, &err);
-  /* Create Events for synchronisation   */
+  /* Create Events for synchronisation: NGSA TASK */
   OSFlagCreate(&NGSAFlagGrp,
                "NGSA flag group",
                (OS_FLAGS) NULL,
@@ -153,6 +160,17 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
                (CPU_TS) 0,
                &err);
 
+
+ #ifdef LED_BLINK
+     sl_led_turn_on(&LED_INSTANCE);
+    /* This just for testing to switch off the LED afetr 180ms , You can use blocking call  sl_sleeptimer_delay_millisecond*/
+    sl_sleeptimer_start_timer(&timer1,delay,my_timer_callback,NULL,0,0);
+ #endif
+
+     /* Initialise AFE: reference Pawel's Code*/
+     init_AEF();
+
+     /*  reference Pawel's Code*/
 #if HEARTBEAT_ON == 1U
         if (heart_beat_ctr >= 4u)
         {
@@ -167,37 +185,36 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
         heart_beat_ctr++;
 #endif /* HEARTBEAT_ON */
 #if SMOKE_ON == 1U
-        if (smoke_ctr >= 10u)
-        {
+
             AFE_smoke_detection_ready_mode();
             Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
             __delay_ms(1);
-
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
             smoke_ctr = 0u;
-        }
+
 #endif /* SMOKE_ON */
+            /*  reference Pawel's Code: Note found Adc reading for CO*/
+#if CO_SENSING_ON == 1U
+        if (CO_sensing_ctr == 6u)
+        {
+            EnableCO();
+            CO_sensing_ctr=0;
+        }
+        else if (CO_sensing_ctr == 61u)
+        {
+            DisableCO();
 
-     /* SMoke */
-     /* Co  */
-     /* Heartbeat Led*/
-     /* To check Code is running , toggle Board LED*/
-    /* ADC Init: init ADC & start command */
-    ADC_init();
-#ifdef LED_BLINK
-   // sl_led_turn_on(&LED_INSTANCE);
-#endif
-    sl_sleeptimer_start_timer(&timer1,delay,my_timer_callback,NULL,0,0);
-
-    /* Initialise AFE*/
-    init_AEF();
-   /* This just for testing to switch off the LED afetr 180ms , You can use blocking call  /*sl_sleeptimer_delay_millisecond*/
-    sl_sleeptimer_start_timer(&timer1,delay,my_timer_callback,NULL,0,0);
+        }
+        CO_sensing_ctr++;
+#endif /* CO_SENSING_ON */
 
   } while (1);
 }
 
+/***************************************************************************//**
+ * on_timeout_Diagnostic: every 10 second: trigger the NGSA
+ ******************************************************************************/
 static void on_timeout_Diagnostic(sl_sleeptimer_timer_handle_t *handle, void *data)
 {
   RTOS_ERR err;
@@ -207,20 +224,26 @@ static void on_timeout_Diagnostic(sl_sleeptimer_timer_handle_t *handle, void *da
              OS_OPT_POST_FLAG_SET,
              &err);
 }
-
+/***************************************************************************
+ * on_timeout_Diagnostic: every 180ms: Switch off LED
+ ******************************************************************************/
+#ifdef LED_BLINK
 static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
 {
-  (void)&data;
-#ifdef LED_BLINK
- // sl_led_turn_off(&LED_INSTANCE);
-#endif
 
-  adc_read=read_val();
+  (void)&data;
+  sl_led_turn_off(&LED_INSTANCE);
+
+
+  //adc_read=read_val();
   /* Disable Clock for Low current*/
-  CMU_ClockEnable(cmuClock_IADC0, false);
-  CMU_ClockEnable(cmuClock_FSRCO, false);
+  //CMU_ClockEnable(cmuClock_IADC0, false);
+  //CMU_ClockEnable(cmuClock_FSRCO, false);
 
 }
+#endif
+
+
 /***************************************************************************//**
  * AFE Init call : refernce from Pawel's github code
  ******************************************************************************/
@@ -294,7 +317,7 @@ extern void SPI_Write(uint8_t add , uint8_t data)
 }
 
 /***************************************************************************//**
- * Timer callback
+ * SPI callback
  ******************************************************************************/
 /* Callback fired when data is transmitted*/
 void transfer_callback(SPIDRV_HandleData_t *handle,
@@ -314,29 +337,48 @@ void transfer_callback(SPIDRV_HandleData_t *handle,
   }
 }
 /***************************************************************************//**
- * wrapper function Delay Fucntion. in Ms
+ * wrapper function: Delay Function in Ms
  ******************************************************************************/
 void __delay_ms(uint16_t time_ms_val)
 {
   sl_sleeptimer_delay_millisecond(time_ms_val);
 }
 /***************************************************************************//**
- * wrapper functionDelay Fucntion. in us
+ * wrapper: Delay Function in us
  ******************************************************************************/
 void __delay_us(uint16_t time_us_val)
 {
   sl_udelay_wait(time_us_val);
 }
 
+
 /***************************************************************************//**
- * Delay Fucntion. Need to validate free GPIO PIN
+ * Enable_SetHigh Function. Need to validate free GPIO PIN
  ******************************************************************************/
-void Enable_SetHigh()
+void Enable_SetHigh(void)
 {
+
+  GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_ENABLE_PIN_PORT, SL_EMLIB_GPIO_INIT_ENABLE_PIN_PIN);
+}
+/***************************************************************************//**
+ * Enable_SetLow Function.
+ ******************************************************************************/
+void Enable_SetLow(void)
+{
+  GPIO_PinOutClear(SL_EMLIB_GPIO_INIT_ENABLE_PIN_PORT, SL_EMLIB_GPIO_INIT_ENABLE_PIN_PIN);
 
 }
-
-void Enable_SetLow()
+/***************************************************************************//**
+ * COpolarization_SetHigh Function.
+ ******************************************************************************/
+void COpolarization_SetHigh(void)
 {
-
+  GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_CO_POL_PORT, SL_EMLIB_GPIO_INIT_CO_POL_PIN);
+}
+/***************************************************************************//**
+ * COpolarization_SetHigh Function.
+ ******************************************************************************/
+void COpolarization_SetLow(void)
+{
+  GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_CO_POL_PORT, SL_EMLIB_GPIO_INIT_CO_POL_PIN);
 }

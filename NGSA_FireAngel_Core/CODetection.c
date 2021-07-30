@@ -5,6 +5,7 @@
  * Created on 15 April 2021, 12:55
  */
 #include "os.h"
+#include "NGSA_task.h"
 
 void SendCOPattern(uint8_t rxData) {
     SPI_Write(0x02, 0x05); //charges the IRCAP, low boost mode

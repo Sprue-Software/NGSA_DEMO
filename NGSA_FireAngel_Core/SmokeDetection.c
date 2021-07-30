@@ -5,6 +5,8 @@
  * Created on 15 April 2021, 11:51
  */
 #include "os.h"
+#include "NGSA_task.h"
+
 #define USE_UART 0
 #define NO_GUI 1
 #define DEFAULT_PHOTO_AMP_ENABLE_PERIOD 1
@@ -20,7 +22,12 @@ uint8_t integ2Time = 0u;
 uint16_t measureAndSentADCReading(uint8_t channel) {
     uint16_t reading;
    // reading = ADCC_GetSingleConversion(ABUF);
-    reading=read_val ();
+    /* ADC Init: init ADC & start command */
+    ADC_init();
+    __delay_ms(50); //allow time read
+   reading=read_val();
+    /* Disable Clock for Low current*/
+    Stop_ADC();
 #if USE_UART == 1u
 #if NO_GUI == 0U
     if (channel == 0) {
@@ -55,7 +62,7 @@ void PA1_100us_Integration() {
     __delay_us(5);
     Enable_SetLow();
     __delay_us(125); //allow enough time for the integration with some slack
-    dark_reading = measureAndSentADCReading(0); //read the integration value and send out
+     dark_reading = measureAndSentADCReading(0); //read the integration value and send out
     SPI_Write(0x04, 0x01); //reset integration capacitors - RESET State
     __delay_us(10); //second integration will be a Lit - LED1En is high
     SPI_Write(0x04, 0x0B); //enable the photo-amp, and set the Status bit to 1, enable LED1 - READY State

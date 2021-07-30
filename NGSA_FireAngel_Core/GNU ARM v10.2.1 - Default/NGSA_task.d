@@ -116,7 +116,11 @@ NGSA_task.o: ../NGSA_task.c \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_type.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_port_sel.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_os_cpu.h \
- ../SleepTests.h
+ ../SleepTests.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\udelay\inc\sl_udelay.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h \
+ ../HeartBeatTests.h ../NGSA_task.h ../SmokeDetection.h
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\toolchain\inc\sl_gcc_preinclude.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_simple_led.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_led.h:
@@ -235,3 +239,9 @@ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platfor
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_port_sel.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_os_cpu.h:
 ../SleepTests.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\udelay\inc\sl_udelay.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h:
+../HeartBeatTests.h:
+../NGSA_task.h:
+../SmokeDetection.h:

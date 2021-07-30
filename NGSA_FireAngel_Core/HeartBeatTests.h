@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 void HeartBeatContBlink(uint16_t no_of_blinks);
-void HeartBeatOn(void);
-void HeartBeatOff(void);
+extern void HeartBeatOn(void);
+extern void HeartBeatOff(void);
 extern void SPI_Write(uint8_t add , uint8_t data);
 #ifdef	__cplusplus
 }

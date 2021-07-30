@@ -87,6 +87,7 @@ autogen/sl_event_handler.o: ../autogen/sl_event_handler.c \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\device_init\inc\sl_device_init_emu.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\sleeptimer\inc\sl_sleeptimer.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_sleeptimer_config.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h \
  ../autogen/sl_simple_led_instances.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_simple_led.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_led.h \
@@ -210,6 +211,7 @@ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platfor
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\device_init\inc\sl_device_init_emu.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\sleeptimer\inc\sl_sleeptimer.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_sleeptimer_config.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h:
 ../autogen/sl_simple_led_instances.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_simple_led.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_led.h:

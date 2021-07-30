@@ -12,10 +12,10 @@
 extern "C" {
 #endif
 
-void HeartbeatAndSleep(void);
-void SmokeHeartBeatAndSleep(void);
-void AFE_low_power_mode(void);
-void AFE_smoke_detection_ready_mode(void);
+extern void HeartbeatAndSleep(void);
+extern void SmokeHeartBeatAndSleep(void);
+extern void AFE_low_power_mode(void);
+extern void AFE_smoke_detection_ready_mode(void);
 
 
 #ifdef	__cplusplus

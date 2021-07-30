@@ -190,6 +190,11 @@ void ADC_init(void)
   IADC_command(IADC0, iadcCmdStartSingle);
 }
 
+void Stop_ADC(void)
+{
+  CMU_ClockEnable(cmuClock_IADC0, false);
+   CMU_ClockEnable(cmuClock_FSRCO, false);
+}
 extern uint32_t read_val(void)
 {
   /* Enough Time to read Adc*/

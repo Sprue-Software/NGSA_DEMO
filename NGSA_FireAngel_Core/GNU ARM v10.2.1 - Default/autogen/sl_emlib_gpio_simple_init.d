@@ -1,11 +1,10 @@
-CODetection.o: ../CODetection.c \
+autogen/sl_emlib_gpio_simple_init.o: \
+ ../autogen/sl_emlib_gpio_simple_init.c \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\toolchain\inc\sl_gcc_preinclude.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_def.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_path.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/rtos_description.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_opt_def.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\em_device.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23b010f512im48.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\cmsis\include\core_cm33.h \
@@ -72,39 +71,20 @@ CODetection.o: ../CODetection.c \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_prs_signals.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_dma_descriptor.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_ldmaxbar_defines.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/cpu_cfg.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_def.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_port_sel.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_cpu_port.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_core.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_common.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/sl_component_catalog.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/emlib_core_debug_config.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_err.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_port_sel.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_def.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\toolchains.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/rtos_err_cfg.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_mem.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/common_cfg.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_math.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_utils.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_version.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_utils.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/rtos_cfg.h \
- C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/os_cfg.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_type.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_port_sel.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_os_cpu.h \
- ../NGSA_task.h
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu_compat.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\toolchain\inc\sl_gcc_preinclude.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_def.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_path.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/rtos_description.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_opt_def.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\em_device.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23b010f512im48.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\cmsis\include\core_cm33.h:
@@ -171,29 +151,12 @@ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platfor
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_prs_signals.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_dma_descriptor.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_ldmaxbar_defines.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/cpu_cfg.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_def.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_port_sel.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_cpu_port.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_core.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_common.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/sl_component_catalog.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/emlib_core_debug_config.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_err.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\cpu\include\cpu_port_sel.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_def.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\toolchains.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/rtos_err_cfg.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_mem.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/common_cfg.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_math.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\lib_utils.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_version.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\common\include\rtos_utils.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/rtos_cfg.h:
-C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/os_cfg.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_type.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\kernel\include\os_port_sel.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\micrium_os\ports\source\gnu\armv7m_os_cpu.h:
-../NGSA_task.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu_compat.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h:

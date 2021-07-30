@@ -251,6 +251,11 @@
           <file name="em_system.h" uri="studio:/sdk/platform/emlib/inc/em_system.h"/>
           <file name="em_usart.h" uri="studio:/sdk/platform/emlib/inc/em_usart.h"/>
         </folder>
+        <folder name="init">
+          <folder name="gpio_simple">
+            <file name="sl_emlib_gpio_simple_init.h" uri="studio:/sdk/platform/emlib/init/gpio_simple/sl_emlib_gpio_simple_init.h"/>
+          </folder>
+        </folder>
       </folder>
       <folder name="driver">
         <folder name="leddrv">
@@ -423,6 +428,7 @@
   <includePath uri="studio:/sdk/platform/emdrv/dmadrv/inc"/>
   <includePath uri="studio:/sdk/platform/emdrv/common/inc"/>
   <includePath uri="studio:/sdk/platform/emlib/inc"/>
+  <includePath uri="studio:/sdk/platform/emlib/init/gpio_simple"/>
   <includePath uri="studio:/sdk/platform/service/hfxo_manager/inc"/>
   <includePath uri="studio:/sdk/platform/driver/leddrv/inc"/>
   <includePath uri="studio:/sdk/platform/micrium_os/common/source"/>

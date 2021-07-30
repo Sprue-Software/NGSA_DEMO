@@ -2,13 +2,19 @@
 <device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/ss/hwconfig/document/device.ecore" name="pin_tool.EFR32FG23B010F512IM48" partId="mcu.arm.efr32.fg23.efr32fg23b010f512im48" contextId="com.silabs.sdk.stack.super:3.2.0._-1351908336">
   <mode name="DefaultMode">
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="PA05" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_EMLIB_GPIO_INIT_ENABLE_PIN%T%sl_emlib_gpio_init_Enable_PIN_config.h"/>
+    <property object="PA05" propertyId="pin.name" value="Enable_PIN"/>
+    <property object="PA05" propertyId="pin.reserve" value="Reserved"/>
+    <property object="PA07" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_EMLIB_GPIO_INIT_CO_POL%T%sl_emlib_gpio_init_CO_POL_config.h"/>
+    <property object="PA07" propertyId="pin.name" value="CO POL"/>
+    <property object="PA07" propertyId="pin.reserve" value="Reserved"/>
     <property object="PB00" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_BOARD_ENABLE_VCOM%T%sl_board_control_config.h"/>
     <property object="PB00" propertyId="pin.reserve" value="Reserved"/>
     <property object="PB02" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_SIMPLE_LED_LED0%T%sl_simple_led_led0_config.h"/>
     <property object="PB02" propertyId="pin.reserve" value="Reserved"/>
     <property object="PC04" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_MX25_FLASH_SHUTDOWN_CS%T%sl_mx25_flash_shutdown_eusart_config.h"/>
     <property object="PC04" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PC09" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_BOARD_ENABLE_DISPLAY%T%sl_board_control_config.h"/>
+    <property object="PC09" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_BOARD_ENABLE_SENSOR_RHT%T%sl_board_control_config.h"/>
     <property object="PC09" propertyId="pin.reserve" value="Reserved"/>
     <property object="PORTIO" propertyId="portio.usart0.enable.clk" value="Enabled"/>
     <property object="PORTIO" propertyId="portio.usart0.enable.cs" value="Enabled"/>
