@@ -51,10 +51,11 @@
 //#define CLK_SRC_ADC_FREQ          5000000 // CLK_SRC_ADC
 //#define CLK_ADC_FREQ              10000 // CLK_ADC - 10MHz max in normal mode
 /* Nishi */
+//Default oversampling (OSR) is 2x, and Conversion Time = ((4 * OSR) + 2) / fCLK_ADC
 //So the conversation time is
 //((4 * 2)+2)/10000 = 0.001s  (1/0.001)= 1ksps ( 1k sample per second)
 
-//Default oversampling (OSR) is 2x, and Conversion Time = ((4 * OSR) + 2) / fCLK_ADC
+/* Kept default*/
 
 #define CLK_SRC_ADC_FREQ          10000000 // CLK_SRC_ADC
 #define CLK_ADC_FREQ              10000000 // CLK_ADC - 10MHz max in normal mode

@@ -1,6 +1,6 @@
 /***************************************************************************//**
  * @file
- * @brief main() function.
+ * @brief NGSA Demo 28 July 2021 .
  *******************************************************************************
  * # License
  * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
