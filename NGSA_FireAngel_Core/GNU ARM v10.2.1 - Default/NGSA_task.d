@@ -120,7 +120,8 @@ NGSA_task.o: ../NGSA_task.c \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\udelay\inc\sl_udelay.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h \
- ../HeartBeatTests.h ../NGSA_task.h ../SmokeDetection.h
+ ../HeartBeatTests.h ../NGSA_task.h ../SmokeDetection.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_spidrv_SPI1_config.h
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\toolchain\inc\sl_gcc_preinclude.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_simple_led.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\driver\leddrv\inc\sl_led.h:
@@ -245,3 +246,4 @@ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_e
 ../HeartBeatTests.h:
 ../NGSA_task.h:
 ../SmokeDetection.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_spidrv_SPI1_config.h:

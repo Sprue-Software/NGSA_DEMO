@@ -25,7 +25,7 @@
 
 // <o SL_SPIDRV_SPI1_BITRATE> SPI bitrate
 // <i> Default: 1000000
-#define SL_SPIDRV_SPI1_BITRATE           1000000
+#define SL_SPIDRV_SPI1_BITRATE           1048576
 
 // <o SL_SPIDRV_SPI1_FRAME_LENGTH> SPI frame length <4-16>
 // <i> Default: 8
@@ -57,7 +57,7 @@
 // <spidrvSlaveStartImmediate=> Transfer starts immediately
 // <spidrvSlaveStartDelayed=> Transfer starts when the bus is idle (CS deasserted)
 // <i> Only applies if instance type is spidrvSlave
-#define SL_SPIDRV_SPI1_SLAVE_START_MODE  spidrvSlaveStartImmediate
+#define SL_SPIDRV_SPI1_SLAVE_START_MODE  spidrvSlaveStartDelayed
 // </h>
 // <<< end of configuration section >>>
 

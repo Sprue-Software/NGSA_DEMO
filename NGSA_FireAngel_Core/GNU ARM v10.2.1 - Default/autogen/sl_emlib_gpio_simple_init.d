@@ -4,7 +4,8 @@ autogen/sl_emlib_gpio_simple_init.o: \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_spidrv_SPI1_config.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\spidrv\inc\spidrv.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\em_device.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23b010f512im48.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\cmsis\include\core_cm33.h \
@@ -71,20 +72,30 @@ autogen/sl_emlib_gpio_simple_init.o: \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_prs_signals.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_dma_descriptor.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_ldmaxbar_defines.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_core.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_common.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/sl_component_catalog.h \
  C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/emlib_core_debug_config.h \
- c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu_compat.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\common\inc\ecode.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/spidrv_config.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\sleeptimer\inc\sl_sleeptimer.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_sleeptimer_config.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\inc\sl_status.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\dmadrv\inc\dmadrv.h \
+ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_ldma.h \
+ C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/dmadrv_config.h \
  c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\toolchain\inc\sl_gcc_preinclude.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\init\gpio_simple\sl_emlib_gpio_simple_init.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_CO_POL_config.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_emlib_gpio_init_Enable_PIN_config.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_spidrv_SPI1_config.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\spidrv\inc\spidrv.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\em_device.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23b010f512im48.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\cmsis\include\core_cm33.h:
@@ -151,12 +162,21 @@ c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platfor
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_prs_signals.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_dma_descriptor.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\device\siliconlabs\efr32fg23\include\efr32fg23_ldmaxbar_defines.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_assert.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_bus.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_core.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_common.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\autogen/sl_component_catalog.h:
 C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/emlib_core_debug_config.h:
-c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_cmu_compat.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\common\inc\ecode.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/spidrv_config.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\service\sleeptimer\inc\sl_sleeptimer.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/sl_sleeptimer_config.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\common\inc\sl_status.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emdrv\dmadrv\inc\dmadrv.h:
+c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_ldma.h:
+C:\Users\ndiwathe\SimplicityStudio\v5_workspace1\NGSA_FireAngel_Core\config/dmadrv_config.h:
 c:\siliconlabs\simplicitystudio\v5_3\developer\sdks\gecko_sdk_suite\v3.2\platform\emlib\inc\em_gpio.h:
