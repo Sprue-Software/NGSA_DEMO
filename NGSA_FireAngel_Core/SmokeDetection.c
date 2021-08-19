@@ -10,6 +10,7 @@
 #define USE_UART 0
 #define NO_GUI 1
 #define DEFAULT_PHOTO_AMP_ENABLE_PERIOD 1
+#define PHOTO_AMP_OUT_TO_ABUF_CTRL 1
 
 //void *memset(void * p1, int c, register size_t n);
 
@@ -19,13 +20,17 @@ uint8_t integ1Time = 0u;
 uint8_t integ2Time = 0u;
 
 
-uint16_t measureAndSentADCReading(uint8_t channel) {
+uint16_t measureAndSentADCReading(uint8_t channel)
+{
     uint16_t reading;
-   // reading = ADCC_GetSingleConversion(ABUF);
+//  reading = ADCC_GetSingleConversion(ABUF);
     /* ADC Init: init ADC & start command */
     ADC_init();
-    __delay_ms(50); //allow time read
-   reading=read_val();
+//    __delay_ms(50); //allow time read
+
+//   reading=read_val();
+    reading = ADC_wait_for_val();
+
     /* Disable Clock for Low current*/
     Stop_ADC();
 #if USE_UART == 1u
@@ -228,9 +233,10 @@ void PA1_100us_Integration() {
 /*
  * Function perform a 100uS integration on PA2
  */
-void PA2_100us_Integration() {
-    uint16_t dark_reading = 0u;
-    uint16_t bright_reading = 0u;
+uint16_t  PA2_100us_Integration()
+{
+volatile uint16_t dark_reading = 0u;
+volatile uint16_t bright_reading = 0u;
     uint16_t diff = 0u;
     char buffer[4] = {0, 0, 0, 0};
     
@@ -325,6 +331,7 @@ void PA2_100us_Integration() {
     EUSART_Write((uint8_t) '\n');
 #endif /* DATA_FOR_EXCEL */    
 #endif /* (USE_UART == 1u && NO_GUI == 1u) */
+    return diff;
 }
 
 /*
@@ -710,9 +717,12 @@ void Photo_Integrate(uint8_t rxData) {
 #else
     uint8_t EnBuf = 0x00;  // ABUF = Hold
 #endif /* PHOTO_AMP_OUT_TO_ABUF_CTRL */
+
     SPI_Write(0x02, 0x05); //charges the IRCAP, low boost mode
-    __delay_ms(8);//(20);
+    __delay_ms(8);//(c.f. 20);
     SPI_Write(0x02, 0x00); //stop charging IRCAP
+
+    SPI_Write(0x00, 0x02); //IH: ABUF = Photo Amp Out
 
     switch (rxData) //determine which PA, Gain setting, and integ. time
     {

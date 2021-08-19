@@ -31,6 +31,8 @@
 #include "sl_udelay.h"
 #include "sl_emlib_gpio_init_Enable_PIN_config.h"
 #include "sl_emlib_gpio_init_CO_POL_config.h"
+#include "sl_emlib_gpio_init_Debug_PIN_config.h"
+#include "events.h"
 #include "HeartBeatTests.h"
 #include "NGSA_task.h"
 #include "SmokeDetection.h"
@@ -74,8 +76,9 @@ sl_sleeptimer_timer_handle_t timer,timer1;
 static char rx_buffer[APP_BUFFER_SIZE];
 static char tx_buffer[APP_BUFFER_SIZE];
 
+// See events.h
+//#define NGSA_EXAMPLE_FLAG_TOGGLE    (OS_FLAGS) (1u <<  0)
 
-#define NGSA_EXAMPLE_FLAG_TOGGLE    (OS_FLAGS) 0x0001
 OS_FLAG_GRP NGSAFlagGrp;
 
 // Semaphore to signal that transfer is complete
@@ -148,6 +151,10 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
 
   (void)&arg;
+
+  /* Initialise AFE: reference Pawel's Code*/
+  init_AEF();
+
   /* Blocking Thread*/
   do {
 
@@ -167,8 +174,6 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
     sl_sleeptimer_start_timer(&timer1,delay,my_timer_callback,NULL,0,0);
  #endif
 
-     /* Initialise AFE: reference Pawel's Code*/
-     init_AEF();
 
      /*  reference Pawel's Code*/
 #if HEARTBEAT_ON == 1U
@@ -187,8 +192,8 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #if SMOKE_ON == 1U
 
             AFE_smoke_detection_ready_mode();
-            Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
-            __delay_ms(1);
+//            Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
+//            __delay_ms(1);
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
             smoke_ctr = 0u;
@@ -245,11 +250,13 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
 
 
 /***************************************************************************//**
- * AFE Init call : refernce from Pawel's github code
+ * AFE Init call : reference from Pawel's github code
+ *
+ * This replicates the once only initialisation performed by the PIC code
+ * handling the GUI App.
  ******************************************************************************/
  void init_AEF(void)
  {
-
    //A bit of house cleaning to get part up - 3.0V Vbat operation
   //Vreg=on, Vdd=Vbat, CO=off
   SPI_Write(0x08,0x05);
@@ -272,7 +279,8 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
   SPI_Write(0x00,0x00);
 
   //Photo=off, ready
-  SPI_Write(0x04,0x02);
+//  SPI_Write(0x04,0x02);
+  SPI_Write(0x04,0x00); // LEDs and Photo Amp off
 
   //Horn,IO,RLED=off
   SPI_Write(0x06,0x00);
@@ -283,11 +291,13 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
   /* IRED1 = 20mA, IRED2 = 20mA */
   SPI_Write(0x0E,0x00);
   /* IRED1 = 80mA, IRED2 = 200mA */
-  SPI_Write(0x0E,0x74);
+//  SPI_Write(0x0E,0x74);
 
   //Horn= normal (no:direct_drive,Enable,bridge)
   SPI_Write(0x10,0x00);
+
  }
+
 /***************************************************************************//**
  * spidrv Write API.
  ******************************************************************************/
@@ -380,5 +390,21 @@ void COpolarization_SetHigh(void)
  ******************************************************************************/
 void COpolarization_SetLow(void)
 {
-  GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_CO_POL_PORT, SL_EMLIB_GPIO_INIT_CO_POL_PIN);
+  GPIO_PinOutClear(SL_EMLIB_GPIO_INIT_CO_POL_PORT, SL_EMLIB_GPIO_INIT_CO_POL_PIN);
+}
+
+/***************************************************************************//**
+ * DebugPin_SetHigh Function.
+ ******************************************************************************/
+void DebugPin_SetHigh(void)
+{
+  GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_DEBUG_PIN_PORT, SL_EMLIB_GPIO_INIT_DEBUG_PIN_PIN);
+}
+
+/***************************************************************************//**
+ * DebugPin_SetLow Function.
+ ******************************************************************************/
+void DebugPin_SetLow(void)
+{
+  GPIO_PinOutClear(SL_EMLIB_GPIO_INIT_DEBUG_PIN_PORT, SL_EMLIB_GPIO_INIT_DEBUG_PIN_PIN);
 }

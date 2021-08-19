@@ -43,6 +43,10 @@
 #include "em_iadc.h"
 #include "em_gpio.h"
 
+#include "os.h"
+#include "events.h"
+#include "NGSA_task.h" // TODO: remove debug
+
 /*******************************************************************************
  *******************************   DEFINES   ***********************************
  ******************************************************************************/
@@ -152,6 +156,8 @@ void initIADC (void)
    // Clear any previous interrupt flags
    IADC_clearInt(IADC0, _IADC_IF_MASK);
 
+   DebugPin_SetLow();  // TODO: remove debug
+
    // Enable single done interrupts
    IADC_enableInt(IADC0, IADC_IEN_SINGLEDONE);
 
@@ -165,6 +171,7 @@ void initIADC (void)
  *****************************************************************************/
 void IADC_IRQHandler(void)
 {
+  RTOS_ERR err;
   uint32_t flags = IADC_getInt(IADC0);
 
    // Read data from the FIFO
@@ -173,6 +180,13 @@ void IADC_IRQHandler(void)
    // For single-ended the result range is 0 to +Vref, i.e., 12 bits for the
    // conversion value.
    singleResult = sample.data * 3.3 / 0xFFF;
+
+   DebugPin_SetHigh();  // TODO: remove debug
+
+   OSFlagPost(&NGSAFlagGrp,
+              EVENT_ADC_COMPLETE,
+              OS_OPT_POST_FLAG_SET,
+              &err);
 
    // Clear IADC interrupt flags
    IADC_clearInt(IADC0, flags);
@@ -204,3 +218,21 @@ extern uint32_t read_val(void)
   return sample.data ;
 }
 
+extern uint32_t ADC_wait_for_val(void)
+{
+  RTOS_ERR err;
+
+  /* Pending on the Event, 10 second Timeout set the event */
+  OSFlagPend(&NGSAFlagGrp,
+             EVENT_ADC_COMPLETE,
+             (OS_TICK) 0,
+             (OS_OPT_PEND_FLAG_SET_ANY | // Wait until ANY flags are set and
+              OS_OPT_PEND_BLOCKING |     // task will block and
+              OS_OPT_PEND_FLAG_CONSUME), // Consume flags
+             (CPU_TS) 0,
+             &err);
+
+  DebugPin_SetLow();  // TODO: remove debug
+
+  return sample.data; // TODO: return singleResult
+}

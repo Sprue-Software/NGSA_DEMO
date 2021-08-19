@@ -11,6 +11,7 @@
     <file name="sl_board_control_config.h" generated="true" linked="false" uri="studio:/project/config/sl_board_control_config.h"/>
     <file name="sl_power_manager_config.h" generated="true" linked="false" uri="studio:/project/config/sl_power_manager_config.h"/>
     <file name="sl_emlib_gpio_init_CO_POL_config.h" generated="true" linked="false" uri="studio:/project/config/sl_emlib_gpio_init_CO_POL_config.h"/>
+    <file name="sl_emlib_gpio_init_Debug_PIN_config.h" generated="true" linked="false" uri="studio:/project/config/sl_emlib_gpio_init_Debug_PIN_config.h"/>
     <file name="sl_emlib_gpio_init_Enable_PIN_config.h" generated="true" linked="false" uri="studio:/project/config/sl_emlib_gpio_init_Enable_PIN_config.h"/>
     <file name="cpu_cfg.h" generated="true" linked="false" uri="studio:/project/config/cpu_cfg.h"/>
     <file name="os_cfg.h" generated="true" linked="false" uri="studio:/project/config/os_cfg.h"/>
