@@ -20,45 +20,19 @@ uint8_t integ1Time = 0u;
 uint8_t integ2Time = 0u;
 
 
-uint16_t measureAndSentADCReading(uint8_t channel)
-{
-    uint16_t reading;
-//  reading = ADCC_GetSingleConversion(ABUF);
-    /* ADC Init: init ADC & start command */
-    ADC_init();
-//    __delay_ms(50); //allow time read
-
-//   reading=read_val();
-    reading = ADC_wait_for_val();
-
-    /* Disable Clock for Low current*/
-    Stop_ADC();
-#if USE_UART == 1u
-#if NO_GUI == 0U
-    if (channel == 0) {
-        EUSART_Write(0x55);
-    } else {
-        EUSART_Write(0xAA);
-    }
-    EUSART_Write((uint8_t) (reading >> 8));
-    EUSART_Write((uint8_t) (reading & 0xFF));    
-#endif  /* NO_GUI */
-#endif  /* USE_UART */
-    return reading;
-}
-
-
 /*
  * Function perform a 100uS integration on PA1
  */
-void PA1_100us_Integration() {
+uint16_t PA1_100us_Integration()
+{
   #if (USE_UART == 1u && NO_GUI == 1u)
     static uint16_t secs;
 #endif /* (USE_UART == 1u && NO_GUI == 1u) */
-    uint16_t dark_reading = 0u;
-    uint16_t bright_reading = 0u;
+    volatile uint16_t dark_reading = 0u;
+    volatile uint16_t bright_reading = 0u;
     uint16_t diff = 0u;
     char buffer[4] = {0, 0, 0, 0};
+
     __delay_us(10); //first integration will be a dark - LED1En is low
     SPI_Write(0x04, 0x03); //enable the photo-amp, and set the Status bit to 1 - READY State
     /*NOTE: as per spec 107us for startup should be enough */
@@ -68,7 +42,7 @@ void PA1_100us_Integration() {
     Enable_SetLow();
     __delay_us(125); //allow enough time for the integration with some slack
      dark_reading = measureAndSentADCReading(0); //read the integration value and send out
-    SPI_Write(0x04, 0x01); //reset integration capacitors - RESET State
+    SPI_Write(0x04, 0x11); //reset integration capacitors - RESET State
     __delay_us(10); //second integration will be a Lit - LED1En is high
     SPI_Write(0x04, 0x0B); //enable the photo-amp, and set the Status bit to 1, enable LED1 - READY State
     __delay_us(10);
@@ -228,6 +202,7 @@ void PA1_100us_Integration() {
     secs += 10u;
     
 #endif /* (USE_UART == 1u && NO_GUI == 1u) */
+    return diff;
 }
 
 /*
@@ -261,8 +236,8 @@ volatile uint16_t bright_reading = 0u;
  #if DEFAULT_PHOTO_AMP_ENABLE_PERIOD == 1U
     __delay_ms(1);
     SPI_Write(0x04, 0x00); // disable the photo-amp, will put into RESET State
-    __delay_ms(1); //allow time to switch back to CO for ABUF 
-    measureAndSentADCReading(1); //take CO reading -WAK 08102018
+//    __delay_ms(1); //allow time to switch back to CO for ABUF
+//    measureAndSentADCReading(1); //take CO reading -WAK 08102018
 #else
     SPI_Write(0x04, 0x00);
 #endif /* DEFAULT_PHOTO_AMP_ENABLE_PERIOD */

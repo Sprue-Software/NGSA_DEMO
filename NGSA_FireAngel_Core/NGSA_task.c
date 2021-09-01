@@ -36,6 +36,7 @@
 #include "HeartBeatTests.h"
 #include "NGSA_task.h"
 #include "SmokeDetection.h"
+#include "CODetection.h"
 
 /*******************************************************************************
  *******************************   DEFINES   ***********************************
@@ -83,14 +84,14 @@ OS_FLAG_GRP NGSAFlagGrp;
 
 // Semaphore to signal that transfer is complete
 static OS_SEM  tx_semaphore;
-uint32_t adc_read=0;
-static uint8_t heart_beat_ctr=0;
-static uint8_t smoke_ctr=0;
-static uint8_t CO_sensing_ctr=0;
+uint32_t adc_read = 0;
+static uint8_t heart_beat_ctr = 0;
+static uint8_t smoke_ctr = 0;
+static uint8_t CO_sensing_ctr = 0;
+
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
  ******************************************************************************/
-
 
 static void NGSA_Diagnostic_task_using_sleep_timer(void *arg);
 static void on_timeout_Diagnostic(sl_sleeptimer_timer_handle_t *handle, void *data);
@@ -170,10 +171,12 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
  #ifdef LED_BLINK
      sl_led_turn_on(&LED_INSTANCE);
-    /* This just for testing to switch off the LED afetr 180ms , You can use blocking call  sl_sleeptimer_delay_millisecond*/
+    /* This just for testing to switch off the LED after 180ms , You can use blocking call  sl_sleeptimer_delay_millisecond*/
     sl_sleeptimer_start_timer(&timer1,delay,my_timer_callback,NULL,0,0);
  #endif
 
+//    init_AEF();
+    DebugPin_SetLow();  // Got sample TODO: remove debug setup
 
      /*  reference Pawel's Code*/
 #if HEARTBEAT_ON == 1U
@@ -194,13 +197,44 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
             AFE_smoke_detection_ready_mode();
 //            Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
 //            __delay_ms(1);
+
+#if 0
+            us_delay_timer(5);
+            us_delay_timer(10);
+            us_delay_timer(12);
+            us_delay_timer(15);
+            us_delay_timer(20);
+#endif
+#if 0
+            DebugPin_SetHigh();  // TODO: remove debug
+            __delay_us(5);
+            DebugPin_SetLow();  // TODO: remove debug
+            __delay_us(10);
+            DebugPin_SetHigh();  // TODO: remove debug
+            __delay_us(12);
+            DebugPin_SetLow();  // TODO: remove debug
+            __delay_us(15);
+            DebugPin_SetHigh();  // TODO: remove debug
+            __delay_us(20);
+            DebugPin_SetLow();  // TODO: remove debug
+#endif
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
             smoke_ctr = 0u;
 
+#else
+            HeartBeatOn();   // TODO: remove debug (heartbeat for AFE watchdog)
+            __delay_ms(10);
+            HeartBeatOff();
+
 #endif /* SMOKE_ON */
-            /*  reference Pawel's Code: Note found Adc reading for CO*/
+
+
 #if CO_SENSING_ON == 1U
+
+            readCO();
+#if 0
+        /*  reference Pawel's Code: Note found Adc reading for CO*/
         if (CO_sensing_ctr == 6u)
         {
             EnableCO();
@@ -212,7 +246,24 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
         }
         CO_sensing_ctr++;
+#endif
 #endif /* CO_SENSING_ON */
+
+#if CO_TEST_ON == 1U
+        if (CO_sensing_ctr == 18u)
+        {
+            DebugPin_SetHigh();  // TODO: remove debug
+            EnableCO();
+
+            RunCOTest();
+
+            CO_sensing_ctr=0;
+
+            DebugPin_SetLow();  // TODO: remove debug
+        }
+        CO_sensing_ctr++;
+#endif
+
 
   } while (1);
 }
@@ -259,14 +310,17 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
  {
    //A bit of house cleaning to get part up - 3.0V Vbat operation
   //Vreg=on, Vdd=Vbat, CO=off
-  SPI_Write(0x08,0x05);
+//IH  SPI_Write(0x08,0x05);
+   SPI_Write(0x08,0x15);  // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator ON
 
   //Battery switch on, regulator switch on
   //regulator switch disables BG startup - auto boost @10ms
-  SPI_Write(0x08,0x07);
+//IH  SPI_Write(0x08,0x07);
+  SPI_Write(0x08,0x17); // CO Amp Power ON, CO Ref OFF, Run on Reg, Regulator ON
 
   //Battery switch on, regulator switch off
-  SPI_Write(0x08,0x04);
+//IH  SPI_Write(0x08,0x04);
+  SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
 
   //Reinforce Register values - write all registers
 
@@ -296,6 +350,7 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
   //Horn= normal (no:direct_drive,Enable,bridge)
   SPI_Write(0x10,0x00);
 
+  initCODetection();
  }
 
 /***************************************************************************//**
@@ -386,7 +441,7 @@ void COpolarization_SetHigh(void)
   GPIO_PinOutSet(SL_EMLIB_GPIO_INIT_CO_POL_PORT, SL_EMLIB_GPIO_INIT_CO_POL_PIN);
 }
 /***************************************************************************//**
- * COpolarization_SetHigh Function.
+ * COpolarization_SetLow Function.
  ******************************************************************************/
 void COpolarization_SetLow(void)
 {

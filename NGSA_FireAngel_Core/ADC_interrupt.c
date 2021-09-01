@@ -126,6 +126,8 @@ void initIADC (void)
    // Modify init structs and initialize
    init.warmup = iadcWarmupKeepWarm;
 
+   // TODO: init.warmup = iadcWarmupKeepInStandby; // modify according to param
+
    // Set the HFSCLK prescale value here
    init.srcClkPrescale = IADC_calcSrcClkPrescale(IADC0, CLK_SRC_ADC_FREQ, 0);
 
@@ -139,6 +141,8 @@ void initIADC (void)
                                               0,
                                               iadcCfgModeNormal,
                                               init.srcClkPrescale);
+
+   initAllConfigs.configs[0].digAvg = iadcDigitalAverage8;
 
    // Assign pins to positive and negative inputs in differential mode
    initSingleInput.posInput   = IADC_INPUT_0_PORT_PIN;
@@ -156,7 +160,7 @@ void initIADC (void)
    // Clear any previous interrupt flags
    IADC_clearInt(IADC0, _IADC_IF_MASK);
 
-   DebugPin_SetLow();  // TODO: remove debug
+   DebugPin_SetHigh();  // TODO: remove debug
 
    // Enable single done interrupts
    IADC_enableInt(IADC0, IADC_IEN_SINGLEDONE);
@@ -181,7 +185,7 @@ void IADC_IRQHandler(void)
    // conversion value.
    singleResult = sample.data * 3.3 / 0xFFF;
 
-   DebugPin_SetHigh();  // TODO: remove debug
+//   DebugPin_SetLow();  // Got sample TODO: remove debug
 
    OSFlagPost(&NGSAFlagGrp,
               EVENT_ADC_COMPLETE,
@@ -207,7 +211,7 @@ void ADC_init(void)
 void Stop_ADC(void)
 {
   CMU_ClockEnable(cmuClock_IADC0, false);
-   CMU_ClockEnable(cmuClock_FSRCO, false);
+  CMU_ClockEnable(cmuClock_FSRCO, false);
 }
 extern uint32_t read_val(void)
 {
@@ -232,7 +236,38 @@ extern uint32_t ADC_wait_for_val(void)
              (CPU_TS) 0,
              &err);
 
-  DebugPin_SetLow();  // TODO: remove debug
+//  DebugPin_SetLow();  // Got sample TODO: remove debug
 
   return sample.data; // TODO: return singleResult
 }
+
+extern uint16_t measureAndSentADCReading(uint8_t channel)
+{
+    uint16_t reading;
+
+    /* ADC Init: init ADC & start command */
+    ADC_init();
+//    __delay_ms(50); //allow time read
+
+//   reading=read_val();
+    reading = ADC_wait_for_val();
+
+    IADC_reset(IADC0);  // Needed to reduce power consumption
+
+    /* Disable Clock for Low current*/
+    Stop_ADC();
+
+#if USE_UART == 1u
+#if NO_GUI == 0U
+    if (channel == 0) {
+        EUSART_Write(0x55);
+    } else {
+        EUSART_Write(0xAA);
+    }
+    EUSART_Write((uint8_t) (reading >> 8));
+    EUSART_Write((uint8_t) (reading & 0xFF));
+#endif  /* NO_GUI */
+#endif  /* USE_UART */
+    return reading;
+}
+

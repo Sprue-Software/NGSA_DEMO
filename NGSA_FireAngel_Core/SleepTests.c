@@ -82,29 +82,26 @@ void AFE_smoke_detection_ready_mode(void)
     SPI_Write(0x0A,0x01);  // SPI normal, bit0: low boost voltage is 1 (5.2V)
 
     SPI_Write(0x0C, 0x83); //Internal timer, 100us, Gain=8
-
-    SPI_Write(0x0E, 0x74); // IRED1 = 80mA, IRED2 = 200mA
 #endif
 
-    /* IRED1 = 80mA, IRED2 = 200mA */
-    SPI_Write(0x0E,0x74);
+    SPI_Write(0x0E,0x74); // IRED1 = 80mA, IRED2 = 200mA
 }
 
 
 void AFE_low_power_mode(void)
 {   
-    // ABuf=off
-    SPI_Write(0x00,0x00);
-    SPI_Write(0x02, 0x00);
+    SPI_Write(0x00,0x00);  // ABuf off
+    SPI_Write(0x02, 0x00); // Low Boost Off, Hi Boost off, IRCAP off
     
     //Photo=off, reset
     SPI_Write(0x04,0x00); /* just in case. Should be already in this state */
     
-    //Horn,IO,RLED=off
+    // Horn,IO,RLED=off, CO Current test off, CO Op Amp tristate disabled
     SPI_Write(0x06,0x00);
     
     //Battery switch on, regulator switch off
-    SPI_Write(0x08,0x04);
+//IH    SPI_Write(0x08,0x04);
+    SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
     
     //Set SPI to RdNow high - SPI read output immediately available
     //turn off watch_dog timer - Otherwise there will be a chirp every 20sec

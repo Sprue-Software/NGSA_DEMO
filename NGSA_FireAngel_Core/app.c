@@ -22,4 +22,5 @@
 void app_init(void)
 {
    NGSA_SYS_INIT();
+   us_delay_init();
 }

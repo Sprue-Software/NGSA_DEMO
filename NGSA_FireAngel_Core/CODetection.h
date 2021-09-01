@@ -12,7 +12,11 @@
 extern "C" {
 #endif
 
-void RunCOTest(void);
+void initCODetection(void);
+uint16_t readCO(void);
+
+uint16_t RunCOTest(void);
+
 void SendCOPattern(uint8_t rxData);
 void EnableCO(void);
 void DisableCO(void);

@@ -229,6 +229,7 @@
           <file name="em_iadc.c" uri="studio:/sdk/platform/emlib/src/em_iadc.c"/>
           <file name="em_ldma.c" uri="studio:/sdk/platform/emlib/src/em_ldma.c"/>
           <file name="em_system.c" uri="studio:/sdk/platform/emlib/src/em_system.c"/>
+          <file name="em_timer.c" uri="studio:/sdk/platform/emlib/src/em_timer.c"/>
           <file name="em_usart.c" uri="studio:/sdk/platform/emlib/src/em_usart.c"/>
         </folder>
         <folder name="inc">
@@ -249,6 +250,7 @@
           <file name="em_iadc.h" uri="studio:/sdk/platform/emlib/inc/em_iadc.h"/>
           <file name="em_ldma.h" uri="studio:/sdk/platform/emlib/inc/em_ldma.h"/>
           <file name="em_system.h" uri="studio:/sdk/platform/emlib/inc/em_system.h"/>
+          <file name="em_timer.h" uri="studio:/sdk/platform/emlib/inc/em_timer.h"/>
           <file name="em_usart.h" uri="studio:/sdk/platform/emlib/inc/em_usart.h"/>
         </folder>
         <folder name="init">
