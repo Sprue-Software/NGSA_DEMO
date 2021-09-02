@@ -47,17 +47,27 @@ void EnableCO(void)
 
 void DisableCO(void)
 {
+  // CO Amp should not be turned off
+  // CO Tristate should only be turned off for CO Test
+
 //    SPI_Write(0x08, 0x34); //Register 4 - Turn off CO reference
-    SPI_Write(0x08, 0x14); //Register 4 - Turn off CO reference
+    SPI_Write(0x08, 0x14); // Register 4 - Turn off CO reference (not CO Amp)
     __delay_ms(10);
-    SPI_Write(0x06, 0x80); //Register 3 - turn off the CO output stage - enable the tri-state
-    __delay_ms(10);
-    SPI_Write(0x08, 0x04); //Register 4 - Turn off CO amp
-    COpolarization_SetLow(); //Turn back on anti-polarization JFET
+//    SPI_Write(0x06, 0x80); //Register 3 - turn off the CO output stage - enable the tri-state
+//    __delay_ms(10);
+ //   SPI_Write(0x08, 0x04); //Register 4 - Turn off CO amp
+ //   COpolarization_SetLow(); //Turn back on anti-polarization JFET
+
+    SPI_Write(0x00, 0x00); //Register 0 - Set ABUF OFF
 }
 
 void initCODetection(void)
 {
+    // RULES:
+    // CO Amp should be ON all the time
+    // CO OpAmp Tri-state should only be Enabled for CO Test (otherwise Tri-state disabled)
+    // CO Ref only on when needed, to save power
+
     SPI_Write(0x08, 0x14); // Register 4 - CO Amp Power ON, Run internals VBAT, Regulator disable
 
     COpolarization_SetHigh(); //Turn off anti-polarization JFET

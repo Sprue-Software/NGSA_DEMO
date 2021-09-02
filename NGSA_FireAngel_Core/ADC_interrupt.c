@@ -160,7 +160,7 @@ void initIADC (void)
    // Clear any previous interrupt flags
    IADC_clearInt(IADC0, _IADC_IF_MASK);
 
-   DebugPin_SetHigh();  // TODO: remove debug
+//   DebugPin_SetHigh();  // TODO: remove debug
 
    // Enable single done interrupts
    IADC_enableInt(IADC0, IADC_IEN_SINGLEDONE);
@@ -238,7 +238,7 @@ extern uint32_t ADC_wait_for_val(void)
 
 //  DebugPin_SetLow();  // Got sample TODO: remove debug
 
-  return sample.data; // TODO: return singleResult
+  return sample.data;
 }
 
 extern uint16_t measureAndSentADCReading(uint8_t channel)

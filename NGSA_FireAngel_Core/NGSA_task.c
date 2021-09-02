@@ -88,6 +88,7 @@ uint32_t adc_read = 0;
 static uint8_t heart_beat_ctr = 0;
 static uint8_t smoke_ctr = 0;
 static uint8_t CO_sensing_ctr = 0;
+static uint8_t CO_test_ctr = 0;
 
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
@@ -132,6 +133,9 @@ void NGSA_SYS_INIT(void)
 static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 {
   RTOS_ERR err;
+  uint8_t  reg3Val;  // TODO: remove debug
+  uint8_t  reg4Val;  // TODO: remove debug
+  uint8_t  reg5Val;  // TODO: remove debug
   /* Calculate Delay  */
 #ifdef LED_BLINK
   uint32_t delay = sl_sleeptimer_ms_to_tick(180);
@@ -231,8 +235,18 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
 
 #if CO_SENSING_ON == 1U
+            if (CO_sensing_ctr == 6u)
+            {
+                EnableCO();
 
-            readCO();
+                readCO();
+
+                DisableCO();
+
+                CO_sensing_ctr = 0;
+            }
+            CO_sensing_ctr++;
+
 #if 0
         /*  reference Pawel's Code: Note found Adc reading for CO*/
         if (CO_sensing_ctr == 6u)
@@ -250,20 +264,21 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #endif /* CO_SENSING_ON */
 
 #if CO_TEST_ON == 1U
-        if (CO_sensing_ctr == 18u)
+        if (CO_test_ctr == 18u)
         {
             DebugPin_SetHigh();  // TODO: remove debug
-            EnableCO();
 
             RunCOTest();
 
-            CO_sensing_ctr=0;
+            CO_test_ctr=0;
 
-            DebugPin_SetLow();  // TODO: remove debug
+            SPI_ReadReg(0x06, &reg3Val); // TODO: remove debug
+            SPI_ReadReg(0x08, &reg4Val); // TODO: remove debug
+            SPI_ReadReg(0x0A, &reg5Val); // TODO: remove debug
+            DebugPin_SetLow();          // TODO: remove debug
         }
-        CO_sensing_ctr++;
+        CO_test_ctr++;
 #endif
-
 
   } while (1);
 }
@@ -353,17 +368,46 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
   initCODetection();
  }
 
+ /***************************************************************************//**
+  * spidrv Write API.
+  ******************************************************************************/
+ extern void SPI_Write(uint8_t add , uint8_t data)
+ {
+   RTOS_ERR err;
+   CPU_TS  ts;
+   Ecode_t ecode;
+
+   tx_buffer[0]=add;
+   tx_buffer[1]=data;
+     // Non-blocking data transfer to slave. When complete, rx buffer
+     // will be filled.
+     ecode = SPIDRV_MTransfer(SPI_HANDLE, tx_buffer, rx_buffer, APP_BUFFER_SIZE, transfer_callback);
+     EFM_ASSERT(ecode == ECODE_OK);
+
+     /* Wait for semaphore indicating that transfer is complete*/
+ #if 1
+     OSSemPend(&tx_semaphore,
+               0,
+               OS_OPT_PEND_BLOCKING,
+               &ts,
+               &err);
+     EFM_ASSERT((RTOS_ERR_CODE_GET(err) == RTOS_ERR_NONE));
+ #endif
+     //printf("Got message from slave: %s\r\n", rx_buffer);
+ }
+
+
 /***************************************************************************//**
  * spidrv Write API.
  ******************************************************************************/
-extern void SPI_Write(uint8_t add , uint8_t data)
+extern void SPI_ReadReg(uint8_t regAddr, uint8_t *pData)
 {
   RTOS_ERR err;
-  CPU_TS  ts;
-  Ecode_t ecode;
+  CPU_TS   ts;
+  Ecode_t  ecode;
 
-  tx_buffer[0]=add;
-  tx_buffer[1]=data;
+  tx_buffer[0] = regAddr | 0x80;  // Set bit 7: WR
+  tx_buffer[1] = 0xFF;            // Dummy data
     // Non-blocking data transfer to slave. When complete, rx buffer
     // will be filled.
     ecode = SPIDRV_MTransfer(SPI_HANDLE, tx_buffer, rx_buffer, APP_BUFFER_SIZE, transfer_callback);
@@ -378,8 +422,9 @@ extern void SPI_Write(uint8_t add , uint8_t data)
               &err);
     EFM_ASSERT((RTOS_ERR_CODE_GET(err) == RTOS_ERR_NONE));
 #endif
-    //printf("Got message from slave: %s\r\n", rx_buffer);
+    *pData = rx_buffer[1];  // Note: rx_buffer[0] is echoed regAddr
 }
+
 
 /***************************************************************************//**
  * SPI callback
