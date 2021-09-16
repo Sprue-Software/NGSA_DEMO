@@ -42,6 +42,7 @@
 #include "em_emu.h"
 #include "em_iadc.h"
 #include "em_gpio.h"
+#include "sl_power_manager.h"
 
 #include "os.h"
 #include "events.h"
@@ -185,8 +186,6 @@ void IADC_IRQHandler(void)
    // conversion value.
    singleResult = sample.data * 3.3 / 0xFFF;
 
-//   DebugPin_SetLow();  // Got sample TODO: remove debug
-
    OSFlagPost(&NGSAFlagGrp,
               EVENT_ADC_COMPLETE,
               OS_OPT_POST_FLAG_SET,
@@ -245,9 +244,13 @@ extern uint16_t measureAndSentADCReading(uint8_t channel)
 {
     uint16_t reading;
 
+    sl_power_manager_add_em_requirement(SL_POWER_MANAGER_EM1);
+
     /* ADC Init: init ADC & start command */
     ADC_init();
 //    __delay_ms(50); //allow time read
+
+//    DebugPin_SetHigh();  // Got sample TODO: remove debug
 
 //   reading=read_val();
     reading = ADC_wait_for_val();
@@ -256,6 +259,8 @@ extern uint16_t measureAndSentADCReading(uint8_t channel)
 
     /* Disable Clock for Low current*/
     Stop_ADC();
+
+    sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
 
 #if USE_UART == 1u
 #if NO_GUI == 0U

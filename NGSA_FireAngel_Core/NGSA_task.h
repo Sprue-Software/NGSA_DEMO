@@ -38,9 +38,9 @@ extern void DebugPin_SetHigh(void);
 extern void DebugPin_SetLow(void);
 
 /* ************* AFE***********************************************************/
-#define HEARTBEAT_ON     1U
+#define HEARTBEAT_ON     0U
 #define SMOKE_ON         0U
-#define CO_SENSING_ON    1u
+#define CO_SENSING_ON    0u
 #define CO_TEST_ON       1u
 #define CO_AMP_ALWAYS_ON 0u
 #undef LED_BLINK

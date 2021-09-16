@@ -48,7 +48,7 @@
 #endif
 
 #ifndef TOOGLE_DELAY_MS
-#define NGSA_DELAY_MS           10000
+#define NGSA_DELAY_MS           2000
 #endif
 
 #ifndef BLINK_TASK_STACK_SIZE
@@ -88,7 +88,7 @@ uint32_t adc_read = 0;
 static uint8_t heart_beat_ctr = 0;
 static uint8_t smoke_ctr = 0;
 static uint8_t CO_sensing_ctr = 0;
-static uint8_t CO_test_ctr = 0;
+static uint8_t CO_test_ctr = 4;
 
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
@@ -180,11 +180,16 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
  #endif
 
 //    init_AEF();
+
+//    SPI_ReadReg(0x06, &reg3Val); // TODO: remove debug
+//    SPI_ReadReg(0x08, &reg4Val); // TODO: remove debug
+//    SPI_ReadReg(0x0A, &reg5Val); // TODO: remove debug
+
     DebugPin_SetLow();  // Got sample TODO: remove debug setup
 
      /*  reference Pawel's Code*/
 #if HEARTBEAT_ON == 1U
-        if (heart_beat_ctr >= 4u)
+        if (heart_beat_ctr >= 40u)
         {
             heart_beat_ctr = 0u;
 
@@ -194,8 +199,11 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
             HeartBeatOff();
             __delay_ms(10); /* separate heartbeat from smoke detection */
         }
-        heart_beat_ctr++;
+        heart_beat_ctr += 2u;
 #endif /* HEARTBEAT_ON */
+
+        if (smoke_ctr >= 10u)
+        {
 #if SMOKE_ON == 1U
 
             AFE_smoke_detection_ready_mode();
@@ -204,80 +212,60 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
 #if 0
             us_delay_timer(5);
-            us_delay_timer(10);
-            us_delay_timer(12);
-            us_delay_timer(15);
-            us_delay_timer(20);
 #endif
 #if 0
             DebugPin_SetHigh();  // TODO: remove debug
             __delay_us(5);
             DebugPin_SetLow();  // TODO: remove debug
-            __delay_us(10);
-            DebugPin_SetHigh();  // TODO: remove debug
-            __delay_us(12);
-            DebugPin_SetLow();  // TODO: remove debug
-            __delay_us(15);
-            DebugPin_SetHigh();  // TODO: remove debug
-            __delay_us(20);
-            DebugPin_SetLow();  // TODO: remove debug
 #endif
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
-            smoke_ctr = 0u;
 
 #else
-            HeartBeatOn();   // TODO: remove debug (heartbeat for AFE watchdog)
+            HeartBeatOn();   // TODO: remove debug (heartbeat for AFE watchdog instead of smoke)
             __delay_ms(10);
             HeartBeatOff();
 
 #endif /* SMOKE_ON */
-
+            smoke_ctr = 0u;
+        }
+        smoke_ctr += 2u;
 
 #if CO_SENSING_ON == 1U
-            if (CO_sensing_ctr == 6u)
-            {
-                EnableCO();
 
-                readCO();
-
-                DisableCO();
-
-                CO_sensing_ctr = 0;
-            }
-            CO_sensing_ctr++;
-
-#if 0
-        /*  reference Pawel's Code: Note found Adc reading for CO*/
-        if (CO_sensing_ctr == 6u)
+        if (CO_sensing_ctr == 59u)
         {
+            DebugPin_SetHigh();  // TODO: remove debug
             EnableCO();
-            CO_sensing_ctr=0;
+
         }
         else if (CO_sensing_ctr == 61u)
         {
+            readCO();
+
             DisableCO();
 
+            DebugPin_SetLow();          // TODO: remove debug
+
+            CO_sensing_ctr = 1;
         }
-        CO_sensing_ctr++;
-#endif
+        CO_sensing_ctr += 2;
+
 #endif /* CO_SENSING_ON */
 
 #if CO_TEST_ON == 1U
-        if (CO_test_ctr == 18u)
+        if (CO_test_ctr >= 184u)
         {
-            DebugPin_SetHigh();  // TODO: remove debug
+            __delay_ms(10);      // TODO: remove debug separator
+
+            DebugPin_SetHigh();  // Got sample TODO: remove debug
 
             RunCOTest();
 
-            CO_test_ctr=0;
-
-            SPI_ReadReg(0x06, &reg3Val); // TODO: remove debug
-            SPI_ReadReg(0x08, &reg4Val); // TODO: remove debug
-            SPI_ReadReg(0x0A, &reg5Val); // TODO: remove debug
-            DebugPin_SetLow();          // TODO: remove debug
+            DebugPin_SetLow();  // Got sample TODO: remove debug
+            CO_test_ctr=4;
         }
-        CO_test_ctr++;
+        CO_test_ctr += 2;
 #endif
 
   } while (1);
@@ -325,17 +313,17 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
  {
    //A bit of house cleaning to get part up - 3.0V Vbat operation
   //Vreg=on, Vdd=Vbat, CO=off
-//IH  SPI_Write(0x08,0x05);
-   SPI_Write(0x08,0x15);  // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator ON
+  SPI_Write(0x08,0x05);
+  //IH   SPI_Write(0x08,0x15);  // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator ON
 
   //Battery switch on, regulator switch on
   //regulator switch disables BG startup - auto boost @10ms
-//IH  SPI_Write(0x08,0x07);
-  SPI_Write(0x08,0x17); // CO Amp Power ON, CO Ref OFF, Run on Reg, Regulator ON
+  SPI_Write(0x08,0x07);
+  //IH  SPI_Write(0x08,0x17); // CO Amp Power ON, CO Ref OFF, Run on Reg, Regulator ON
 
   //Battery switch on, regulator switch off
-//IH  SPI_Write(0x08,0x04);
-  SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
+  SPI_Write(0x08,0x04);
+  //IH  SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
 
   //Reinforce Register values - write all registers
 
@@ -365,7 +353,7 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
   //Horn= normal (no:direct_drive,Enable,bridge)
   SPI_Write(0x10,0x00);
 
-  initCODetection();
+//  initCODetection();
  }
 
  /***************************************************************************//**
