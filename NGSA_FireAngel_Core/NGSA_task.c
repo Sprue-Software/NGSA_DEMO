@@ -48,7 +48,7 @@
 #endif
 
 #ifndef TOOGLE_DELAY_MS
-#define NGSA_DELAY_MS           2000
+#define NGSA_DELAY_MS           1000
 #endif
 
 #ifndef BLINK_TASK_STACK_SIZE
@@ -88,7 +88,7 @@ uint32_t adc_read = 0;
 static uint8_t heart_beat_ctr = 0;
 static uint8_t smoke_ctr = 0;
 static uint8_t CO_sensing_ctr = 0;
-static uint8_t CO_test_ctr = 4;
+static uint8_t CO_test_ctr = 0;
 
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
@@ -147,7 +147,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
                "NGSA flag group",
                (OS_FLAGS) NULL,
                &err);
-  /* Create Periodic Task of 10 seconds , On timeout signal the waiting Task  */
+  /* Create Periodic Task of 1 second (was 10) , On timeout signal the waiting Task  */
   sl_sleeptimer_start_periodic_timer_ms(&timer,
                                         NGSA_DELAY_MS,
                                         on_timeout_Diagnostic, NULL,
@@ -160,11 +160,13 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
   /* Initialise AFE: reference Pawel's Code*/
   init_AEF();
 
+  DebugPin_SetLow();  // Got sample TODO: remove debug setup
+
   /* Blocking Thread*/
   do {
 
     RTOS_ERR err;
-    /* Pending on the Event, 10 second Timeout set the event */
+    /* Pending on the Event, 11 second Timeout set the event */
     OSFlagPend(&NGSAFlagGrp,
                NGSA_EXAMPLE_FLAG_TOGGLE,
                (OS_TICK) 0,
@@ -185,8 +187,6 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 //    SPI_ReadReg(0x08, &reg4Val); // TODO: remove debug
 //    SPI_ReadReg(0x0A, &reg5Val); // TODO: remove debug
 
-    DebugPin_SetLow();  // Got sample TODO: remove debug setup
-
      /*  reference Pawel's Code*/
 #if HEARTBEAT_ON == 1U
         if (heart_beat_ctr >= 40u)
@@ -199,7 +199,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
             HeartBeatOff();
             __delay_ms(10); /* separate heartbeat from smoke detection */
         }
-        heart_beat_ctr += 2u;
+        heart_beat_ctr++;
 #endif /* HEARTBEAT_ON */
 
         if (smoke_ctr >= 10u)
@@ -229,7 +229,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #endif /* SMOKE_ON */
             smoke_ctr = 0u;
         }
-        smoke_ctr += 2u;
+        smoke_ctr++;
 
 #if CO_SENSING_ON == 1U
 
@@ -237,35 +237,35 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
         {
             DebugPin_SetHigh();  // TODO: remove debug
             EnableCO();
-
         }
-        else if (CO_sensing_ctr == 61u)
+        else if (CO_sensing_ctr == 60u)
         {
             readCO();
 
             DisableCO();
 
+            AFE_low_power_mode();
             DebugPin_SetLow();          // TODO: remove debug
+            CO_sensing_ctr = 0;
 
-            CO_sensing_ctr = 1;
+            __delay_ms(50);
         }
-        CO_sensing_ctr += 2;
+        CO_sensing_ctr++;
 
 #endif /* CO_SENSING_ON */
 
 #if CO_TEST_ON == 1U
-        if (CO_test_ctr >= 184u)
+        if (CO_test_ctr >= 181u)
         {
+            DebugPin_SetLow();  // Got sample TODO: remove debug
             __delay_ms(10);      // TODO: remove debug separator
-
             DebugPin_SetHigh();  // Got sample TODO: remove debug
 
             RunCOTest();
 
-            DebugPin_SetLow();  // Got sample TODO: remove debug
-            CO_test_ctr=4;
+            CO_test_ctr = 0;
         }
-        CO_test_ctr += 2;
+        CO_test_ctr++;
 #endif
 
   } while (1);

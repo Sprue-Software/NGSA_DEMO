@@ -100,8 +100,8 @@ void AFE_low_power_mode(void)
     SPI_Write(0x06,0x00);
     
     //Battery switch on, regulator switch off
-//IH    SPI_Write(0x08,0x04);
-    SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
+    SPI_Write(0x08,0x04);
+    //IH    SPI_Write(0x08,0x14); // CO Amp Power ON, CO Ref OFF, Run internals VBAT, Regulator disable
     
     //Set SPI to RdNow high - SPI read output immediately available
     //turn off watch_dog timer - Otherwise there will be a chirp every 20sec
