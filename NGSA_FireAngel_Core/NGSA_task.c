@@ -37,6 +37,7 @@
 #include "NGSA_task.h"
 #include "SmokeDetection.h"
 #include "CODetection.h"
+#include "buzzer.h"
 
 /*******************************************************************************
  *******************************   DEFINES   ***********************************
@@ -89,6 +90,7 @@ static uint8_t heart_beat_ctr = 0;
 static uint8_t smoke_ctr = 0;
 static uint8_t CO_sensing_ctr = 0;
 static uint8_t CO_test_ctr = 0;
+static uint8_t buzz_ctr = 0;
 
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
@@ -162,6 +164,8 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 
   DebugPin_SetLow();  // Got sample TODO: remove debug setup
 
+  CMU_ClockEnable(cmuClock_TIMER0, true);
+
   /* Blocking Thread*/
   do {
 
@@ -213,11 +217,6 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #if 0
             us_delay_timer(5);
 #endif
-#if 0
-            DebugPin_SetHigh();  // TODO: remove debug
-            __delay_us(5);
-            DebugPin_SetLow();  // TODO: remove debug
-#endif
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
 
@@ -230,6 +229,27 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
             smoke_ctr = 0u;
         }
         smoke_ctr++;
+#if BUZZER_TEST
+        if (buzz_ctr == 2u)
+        {
+//            DebugPin_SetHigh();  // TODO: remove debug
+            buzzer_init(3400);  // 3.4kHz
+        }
+        else if (buzz_ctr == 3u)
+        {
+            buzzer_stop();
+            __delay_ms(100);
+            buzzer_init(3100);  // 3.1kHz
+        }
+        if (buzz_ctr == 4u)
+        {
+            __delay_ms(100); // compensate for 100ms delay starting '1s' on
+            buzzer_stop();
+            DebugPin_SetLow();  // TODO: remove debug
+            buzz_ctr = 0;
+        }
+        buzz_ctr++;
+#endif
 
 #if CO_SENSING_ON == 1U
 

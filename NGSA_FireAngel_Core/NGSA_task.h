@@ -41,8 +41,9 @@ extern void DebugPin_SetLow(void);
 #define HEARTBEAT_ON     0U
 #define SMOKE_ON         0U
 #define CO_SENSING_ON    0u
-#define CO_TEST_ON       1u
+#define CO_TEST_ON       0u
 #define CO_AMP_ALWAYS_ON 0u
+#define BUZZER_TEST      1u
 #undef LED_BLINK
 //#define LED_BLINK 0
 #endif  // BLINK_H

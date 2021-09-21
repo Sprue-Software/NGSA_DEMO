@@ -1,5 +1,7 @@
 #include "spidrv.h"
 #include "sl_spidrv_instances.h"
+#include "em_assert.h"
+
 
 #include "sl_spidrv_SPI1_config.h"
 
@@ -12,16 +14,22 @@ SPIDRV_Init_t sl_spidrv_init_SPI1 = {
   .portLocationTx = SL_SPIDRV_SPI1_TX_LOC,
   .portLocationRx = SL_SPIDRV_SPI1_RX_LOC,
   .portLocationClk = SL_SPIDRV_SPI1_CLK_LOC,
+#if defined(SL_SPIDRV_SPI1_CS_LOC)
   .portLocationCs = SL_SPIDRV_SPI1_CS_LOC,
+#endif
 #elif defined(_GPIO_USART_ROUTEEN_MASK)
   .portTx = SL_SPIDRV_SPI1_TX_PORT,
   .portRx = SL_SPIDRV_SPI1_RX_PORT,
   .portClk = SL_SPIDRV_SPI1_CLK_PORT,
+#if defined(SL_SPIDRV_SPI1_CS_PORT)
   .portCs = SL_SPIDRV_SPI1_CS_PORT,
+#endif
   .pinTx = SL_SPIDRV_SPI1_TX_PIN,
   .pinRx = SL_SPIDRV_SPI1_RX_PIN,
   .pinClk = SL_SPIDRV_SPI1_CLK_PIN,
+#if defined(SL_SPIDRV_SPI1_CS_PIN)
   .pinCs = SL_SPIDRV_SPI1_CS_PIN,
+#endif
 #else
   .portLocation = SL_SPIDRV_SPI1_ROUTE_LOC,
 #endif
