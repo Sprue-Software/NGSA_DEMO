@@ -82,6 +82,9 @@ void AFE_smoke_detection_ready_mode(void)
     SPI_Write(0x0A,0x01);  // SPI normal, bit0: low boost voltage is 1 (5.2V)
 
     SPI_Write(0x0C, 0x83); //Internal timer, 100us, Gain=8
+
+    // Set Enable controls Photo Integration
+    SPI_Write(0x10,0x00); //Horn= normal (no:direct_drive,Enable,bridge)
 #endif
 
     SPI_Write(0x0E,0x74); // IRED1 = 80mA, IRED2 = 200mA

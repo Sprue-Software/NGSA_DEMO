@@ -214,9 +214,6 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 //            Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
 //            __delay_ms(1);
 
-#if 0
-            us_delay_timer(5);
-#endif
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
 
@@ -232,20 +229,28 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #if BUZZER_TEST
         if (buzz_ctr == 2u)
         {
-//            DebugPin_SetHigh();  // TODO: remove debug
             buzzer_init(3400);  // 3.4kHz
         }
         else if (buzz_ctr == 3u)
         {
             buzzer_stop();
-            __delay_ms(100);
+            __delay_ms(8);
+            DebugPin_SetHigh();  // TODO: remove debug
+
+            AFE_smoke_detection_ready_mode();
+            Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
+            AFE_low_power_mode();
+
+            DebugPin_SetLow();  // TODO: remove debug
+
+            __delay_ms(80);
+//            __delay_ms(100);
             buzzer_init(3100);  // 3.1kHz
         }
         if (buzz_ctr == 4u)
         {
             __delay_ms(100); // compensate for 100ms delay starting '1s' on
             buzzer_stop();
-            DebugPin_SetLow();  // TODO: remove debug
             buzz_ctr = 0;
         }
         buzz_ctr++;

@@ -28,14 +28,16 @@ component:
 - {id: brd4001a}
 - {id: brd4263c}
 - {id: spidrv_core}
+- instance: [Enable]
+  id: pwm
 - instance: [led0]
   id: simple_led
 - {id: device_init}
 - instance: [SPI1]
   id: spidrv
 - {id: emlib_timer}
-- {id: sleeptimer}
 - {id: EFR32FG23B010F512IM48}
+- {id: sleeptimer}
 define:
 - {name: DEBUG_EFM}
 ui_hints: {}

@@ -38,7 +38,7 @@ uint16_t PA1_100us_Integration()
     /*NOTE: as per spec 107us for startup should be enough */
     __delay_us(150); //wait for internal photo amp 3v regulator to stabilize 
     Enable_SetHigh(); //start dark integration utilizing Enable Pin
-    __delay_us(5);
+    __delay_us(10);
     Enable_SetLow();
     __delay_us(125); //allow enough time for the integration with some slack
      dark_reading = measureAndSentADCReading(0); //read the integration value and send out
@@ -47,7 +47,7 @@ uint16_t PA1_100us_Integration()
     SPI_Write(0x04, 0x0B); //enable the photo-amp, and set the Status bit to 1, enable LED1 - READY State
     __delay_us(10);
     Enable_SetHigh(); //start Lit integration utilizing Enable Pin
-    __delay_us(5);
+    __delay_us(10);
     Enable_SetLow();
     __delay_us(125);
     bright_reading = measureAndSentADCReading(0); //read the integration value and send out
@@ -219,7 +219,7 @@ volatile uint16_t bright_reading = 0u;
     SPI_Write(0x04, 0x03); //enable the photo-amp, and set the Status bit to 1 - READY State
     __delay_us(150); //wait for internal photo amp 3v regulator to stabilize            
     Enable_SetHigh(); //start dark integration utilizing Enable Pin
-    __delay_us(5);
+    __delay_us(10);
     Enable_SetLow();
     __delay_us(125); //allow enough time for the integration with some slack
     dark_reading = measureAndSentADCReading(1); //read the integration value and send out
@@ -228,7 +228,7 @@ volatile uint16_t bright_reading = 0u;
     SPI_Write(0x04, 0x13); //enable the photo-amp, and set the Status bit to 1, enable LED2 - READY State
     __delay_us(10);
     Enable_SetHigh(); //start Lit integration utilizing Enable Pin
-    __delay_us(5);
+    __delay_us(10);
     Enable_SetLow();
     __delay_us(125);
     bright_reading = measureAndSentADCReading(1); //read the integration value and send out

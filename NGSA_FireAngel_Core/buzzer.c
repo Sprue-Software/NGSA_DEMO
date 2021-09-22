@@ -40,11 +40,6 @@ void buzzer_init(uint32_t pwmFreq)
 {
   uint32_t timerFreq = 0;
 
-  // Initialize the timer
-  TIMER_Init_TypeDef timerInit = TIMER_INIT_DEFAULT;
-  // Configure TIMER0 Compare/Capture for output compare
-  TIMER_InitCC_TypeDef timerCCInit = TIMER_INITCC_DEFAULT;
-
   timerInit.prescale = timerPrescale1;
   timerInit.enable = false;
   timerCCInit.mode = timerCCModeCompare;
@@ -55,8 +50,8 @@ void buzzer_init(uint32_t pwmFreq)
 
   // Route Timer0 CC0 output to PA5
   GPIO->TIMERROUTE[0].ROUTEEN  = GPIO_TIMER_ROUTEEN_CC0PEN;
-  GPIO->TIMERROUTE[0].CC0ROUTE = (gpioPortA << _GPIO_TIMER_CC0ROUTE_PORT_SHIFT) |
-                                 (5 << _GPIO_TIMER_CC0ROUTE_PIN_SHIFT);
+  GPIO->TIMERROUTE[0].CC0ROUTE = (SL_EMLIB_GPIO_INIT_ENABLE_PIN_PORT << _GPIO_TIMER_CC0ROUTE_PORT_SHIFT) |
+                                 (SL_EMLIB_GPIO_INIT_ENABLE_PIN_PIN << _GPIO_TIMER_CC0ROUTE_PIN_SHIFT);
 
   TIMER_InitCC(TIMER0, 0, &timerCCInit);
 
@@ -69,7 +64,6 @@ void buzzer_init(uint32_t pwmFreq)
   SPI_Write(0x02, 0x02);  // Reg 1 - High Boost Enable
   SPI_Write(0x0A, 0x14);  // Reg 5 - High Boost 11.5v
   SPI_Write(0x10, 0x09);  // Reg 8 - FEED 2/3 pin Enabled HB/HS, Horn Enable selection -> Enable Pin
-//  SPI_Write(0x10, 0x0B);  // Reg 8 - FEED 2/3 pin Enabled HB/HS, Horn Enable selection -> Enable Pin
   SPI_Write(0x06, 0x01);  // Reg 3 - Horn Enable
 
   sl_power_manager_add_em_requirement(SL_POWER_MANAGER_EM1);
@@ -81,6 +75,9 @@ void buzzer_init(uint32_t pwmFreq)
 void buzzer_stop(void)
 {
   TIMER_Enable(TIMER0, false);
+  TIMER_Reset(TIMER0);
+
+  GPIO->TIMERROUTE[0].ROUTEEN  &= (~GPIO_TIMER_ROUTEEN_CC0PEN);
 
   sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
 }
