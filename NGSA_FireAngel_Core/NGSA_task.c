@@ -138,6 +138,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
   uint8_t  reg3Val;  // TODO: remove debug
   uint8_t  reg4Val;  // TODO: remove debug
   uint8_t  reg5Val;  // TODO: remove debug
+  volatile uint16_t reading = 0u;
   /* Calculate Delay  */
 #ifdef LED_BLINK
   uint32_t delay = sl_sleeptimer_ms_to_tick(180);
@@ -160,7 +161,8 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
   (void)&arg;
 
   /* Initialise AFE: reference Pawel's Code*/
-  init_AEF();
+  // init_AEF(); // Ian's general Init
+  init_AEF_CO(); // Init for CO test
 
   DebugPin_SetLow();  // Got sample TODO: remove debug setup
 
@@ -221,6 +223,8 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
             HeartBeatOn();   // TODO: remove debug (heartbeat for AFE watchdog instead of smoke)
             __delay_ms(10);
             HeartBeatOff();
+
+            //reading = measureAndSentADCReading(1);
 
 #endif /* SMOKE_ON */
             smoke_ctr = 0u;
@@ -377,8 +381,40 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
 
   //Horn= normal (no:direct_drive,Enable,bridge)
   SPI_Write(0x10,0x00);
+  // CO OPAMP ON - AKIF
+  SPI_Write(0x08, 0x14); //Register 4 - Run off Battery Internal, Regulator disable, Enable CO Amp
 
 //  initCODetection();
+ }
+
+ /***************************************************************************//**
+  * Init function for CO test:
+  * Temporary init code using for Pace and Figaro open, short and normal
+  * condition tests. It will be edited/replaced with general init function later.
+  ******************************************************************************/
+
+ void init_AEF_CO(void)
+ {
+   //  Register 5: WDHrn = 0, WDEn = 0, RdNow = 1, LBV = 1 (5.2V), HBV[2:1] = [00] (11.5V)
+   SPI_Write(0x0A,0x11);
+
+   //  Register 4: RegSel = 0, RegEn = 0, BatSel = 1, COAEn = 1. COREn = 1, COCurPol = 0
+   //  Turn on CO op amp and CO reference voltage
+   SPI_Write(0x08,0x34);
+
+   // Set zero the registers which are not related with CO.
+   SPI_Write(0x0C,0x00);
+   SPI_Write(0x0E,0x00);
+   SPI_Write(0x10,0x00);
+   SPI_Write(0x12,0x00);
+
+   // Register 0: Abuf[3:0] = [0011] (3)
+   // Monitor the CO op amp output.
+   SPI_Write(0x00,0x03);
+
+   // Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 0, COCurSel = 0, COTri = 0
+   // Turn the CO op-amp output.
+   SPI_Write (0x06, 0x00);
  }
 
  /***************************************************************************//**

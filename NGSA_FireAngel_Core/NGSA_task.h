@@ -27,6 +27,7 @@ extern void ADC_init(void);
 extern uint32_t ADC_wait_for_val(void);
 
 void init_AEF(void);
+void init_AEF_CO(void);
 extern void Stop_ADC(void);
 extern void __delay_ms(uint16_t time_ms_val);
 extern void SPI_Write(uint8_t add , uint8_t data);
@@ -41,9 +42,9 @@ extern void DebugPin_SetLow(void);
 #define HEARTBEAT_ON     0U
 #define SMOKE_ON         0U
 #define CO_SENSING_ON    0u
-#define CO_TEST_ON       0u
+#define CO_TEST_ON       1u
 #define CO_AMP_ALWAYS_ON 0u
-#define BUZZER_TEST      1u
+#define BUZZER_TEST      0u
 #undef LED_BLINK
 //#define LED_BLINK 0
 #endif  // BLINK_H

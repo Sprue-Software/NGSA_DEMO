@@ -120,49 +120,27 @@ void DisableCOPolar(uint8_t rxData) {
 uint16_t RunCOTest(void)
 {
   volatile uint16_t reading1 = 0u;
-  volatile uint16_t reading2 = 0u;
 
-  //IH
-  SPI_Write (0x00, 0x03); // Reg 0 - Set ABUF to the CO sensor
+  //Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 0, COCurSel = 0, COTri = 1
+  //Tristate the CO amp output.
+  SPI_Write(0x06,0x80);
 
-  COpolarization_SetLow(); //Turn back on anti-polarization JFET (or analog switch)
+  //Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 1, COCurSel = 0, COTri = 1
+  //Turn on the test current source.
+  SPI_Write (0x06, 0xA0);
+  __delay_ms(500);  // Charging time 500 ms seconds
 
-  SPI_Write(0x06, 0x00); //Register 3 - turn on the CO output stage - disable the tristate
-  SPI_Write(0x08, 0x14); //Register 4 - Run off Battery Internal, Regulator disable
-  //             Enable CO Amp
-  __delay_ms(10);
-  SPI_Write(0x08, 0x34); //Register 4 - Same as above plus enable CO reference
-
-  COpolarization_SetHigh(); //Turn off anti-polarization JFET or the analog switch
-  __delay_ms(1300); //Run CO amp for 1.3 seconds
-
-  reading1 = measureAndSentADCReading(1); //read the CO value
-
-  SPI_Write(0x06, 0x80); //Register 3 - CO Output TriStated,sink, test OFF
-  __delay_us(10);
-  SPI_Write(0x06, 0xA0); //Register 3 - CO Output TriStated,sink, test ON
-  __delay_ms(500);       // Charging time 500 ms seconds
-
-  SPI_Write(0x06, 0x80); //Register 3 - CO Output TriStated,sink, test OFF
+  // Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 0, COCurSel = 0, COTri = 1
+  // Turn off the current source.
+  SPI_Write (0x06, 0x80);
   __delay_us(50);
-  SPI_Write(0x06, 0x00); //Register 3 - CO Output tristate OFF,sink, test OFF
-  __delay_ms(1300); //Run CO amp for 1.3 seconds
 
-//  SPI_Write(0x00, 0x03); //Register 0 - Set ABUF to the CO sensor
-  reading2 = measureAndSentADCReading(1); //read the CO value
+  // Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 0, COCurSel = 0, COTri = 0
+  // Turn on the CO op-amp output.
+  SPI_Write (0x06, 0x00);
 
-  SPI_Write(0x08, 0x14); //Register 4 - Turn off CO reference
-  __delay_ms(10);
-
-#if 1 // standard PIC
-  SPI_Write(0x06, 0x80); //Register 3 - turn off the CO output stage - enable the tristate
-  __delay_ms(10);
-  SPI_Write(0x08, 0x04); //Turn off CO amp
-  COpolarization_SetLow(); //Turn back on anti-polarization JFET
-#endif
-
-  // ABuf=off
-  SPI_Write(0x00,0x00);
+  // Make ADC measurement at ABUF pin.
+  reading1 = measureAndSentADCReading(1);
 
   return reading1;
 }
