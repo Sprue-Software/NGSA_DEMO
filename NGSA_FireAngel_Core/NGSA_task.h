@@ -39,11 +39,11 @@ extern void DebugPin_SetLow(void);
 
 /* ************* AFE***********************************************************/
 #define HEARTBEAT_ON     0U
-#define SMOKE_ON         0U
+#define SMOKE_ON         1U
 #define CO_SENSING_ON    0u
 #define CO_TEST_ON       0u
 #define CO_AMP_ALWAYS_ON 0u
-#define BUZZER_TEST      1u
+#define BUZZER_TEST      0u
 #undef LED_BLINK
 //#define LED_BLINK 0
 #endif  // BLINK_H

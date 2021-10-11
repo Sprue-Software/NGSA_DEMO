@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="uc.module.setup.componentSetup.com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:10.2.1.20201103.gcc" propertyScope="project">
-  <folder name="gecko_sdk_3.2.1">
+  <folder name="gecko_sdk_3.2.2">
     <folder name="platform">
       <folder name="Device">
         <folder name="SiliconLabs">
@@ -270,6 +270,14 @@
             <file name="sl_simple_led.h" uri="studio:/sdk/platform/driver/leddrv/inc/sl_simple_led.h"/>
           </folder>
         </folder>
+        <folder name="pwm">
+          <folder name="src">
+            <file name="sl_pwm.c" uri="studio:/sdk/platform/driver/pwm/src/sl_pwm.c"/>
+          </folder>
+          <folder name="inc">
+            <file name="sl_pwm.h" uri="studio:/sdk/platform/driver/pwm/inc/sl_pwm.h"/>
+          </folder>
+        </folder>
       </folder>
       <folder name="micrium_os">
         <folder name="common">
@@ -443,6 +451,7 @@
   <includePath uri="studio:/sdk/hardware/driver/mx25_flash_shutdown/inc/sl_mx25_flash_shutdown_eusart"/>
   <includePath uri="studio:/sdk/platform/peripheral/inc"/>
   <includePath uri="studio:/sdk/platform/service/power_manager/inc"/>
+  <includePath uri="studio:/sdk/platform/driver/pwm/inc"/>
   <includePath uri="studio:/sdk/platform/common/toolchain/inc"/>
   <includePath uri="studio:/sdk/platform/service/system/inc"/>
   <includePath uri="studio:/sdk/platform/service/sleeptimer/inc"/>

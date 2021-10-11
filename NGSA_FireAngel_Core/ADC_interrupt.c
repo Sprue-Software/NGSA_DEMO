@@ -62,7 +62,7 @@
 
 /* Kept default*/
 
-#define CLK_SRC_ADC_FREQ          10000000 // CLK_SRC_ADC
+#define CLK_SRC_ADC_FREQ          20000000 // CLK_SRC_ADC
 #define CLK_ADC_FREQ              10000000 // CLK_ADC - 10MHz max in normal mode
 
 /*
@@ -108,9 +108,7 @@ void initIADC (void)
    IADC_InitSingle_t initSingle = IADC_INITSINGLE_DEFAULT;
    IADC_SingleInput_t initSingleInput = IADC_SINGLEINPUT_DEFAULT;
 
-   // Enable IADC0 and GPIO clock branches
-   CMU_ClockEnable(cmuClock_IADC0, true);
-   CMU_ClockEnable(cmuClock_GPIO, true);
+
    /* Note: For EFR32xG21 radio devices, library function calls to
     * CMU_ClockEnable() have no effect as oscillators are automatically turned
     * on/off based on demand from the peripherals; CMU_ClockEnable() is a dummy
@@ -126,8 +124,8 @@ void initIADC (void)
 
    // Modify init structs and initialize
    init.warmup = iadcWarmupKeepWarm;
-
-   // TODO: init.warmup = iadcWarmupKeepInStandby; // modify according to param
+  //initAllConfigs.configs[0].adcMode=iadcCfgModeHighSpeed;
+ // TODO: init.warmup = iadcWarmupKeepInStandby; // modify according to param
 
    // Set the HFSCLK prescale value here
    init.srcClkPrescale = IADC_calcSrcClkPrescale(IADC0, CLK_SRC_ADC_FREQ, 0);
@@ -143,7 +141,7 @@ void initIADC (void)
                                               iadcCfgModeNormal,
                                               init.srcClkPrescale);
 
-   initAllConfigs.configs[0].digAvg = iadcDigitalAverage8;
+   initAllConfigs.configs[0].digAvg = iadcDigitalAverage2;
 
    // Assign pins to positive and negative inputs in differential mode
    initSingleInput.posInput   = IADC_INPUT_0_PORT_PIN;
@@ -161,7 +159,7 @@ void initIADC (void)
    // Clear any previous interrupt flags
    IADC_clearInt(IADC0, _IADC_IF_MASK);
 
-//   DebugPin_SetHigh();  // TODO: remove debug
+  // DebugPin_SetHigh();  // TODO: remove debug
 
    // Enable single done interrupts
    IADC_enableInt(IADC0, IADC_IEN_SINGLEDONE);
@@ -177,13 +175,13 @@ void initIADC (void)
 void IADC_IRQHandler(void)
 {
   RTOS_ERR err;
-  uint32_t flags = IADC_getInt(IADC0);
+
 
    // Read data from the FIFO
    sample = IADC_pullSingleFifoResult(IADC0);
+   DebugPin_SetHigh();
+   uint32_t flags = IADC_getInt(IADC0);
 
-   // For single-ended the result range is 0 to +Vref, i.e., 12 bits for the
-   // conversion value.
    singleResult = sample.data * 3.3 / 0xFFF;
 
    OSFlagPost(&NGSAFlagGrp,
@@ -193,6 +191,8 @@ void IADC_IRQHandler(void)
 
    // Clear IADC interrupt flags
    IADC_clearInt(IADC0, flags);
+   NVIC_ClearPendingIRQ(IADC_IRQn);
+   NVIC_EnableIRQ(IADC_IRQn);
 
 }
 
@@ -202,7 +202,7 @@ void IADC_IRQHandler(void)
 void ADC_init(void)
 {
   /* Initialize the IADC */
-  initIADC();
+ // initIADC();
   /* Start the IADC */
   IADC_command(IADC0, iadcCmdStartSingle);
 }
@@ -244,23 +244,11 @@ extern uint16_t measureAndSentADCReading(uint8_t channel)
 {
     uint16_t reading;
 
-    sl_power_manager_add_em_requirement(SL_POWER_MANAGER_EM1);
 
-    /* ADC Init: init ADC & start command */
-    ADC_init();
-//    __delay_ms(50); //allow time read
-
-//    DebugPin_SetHigh();  // Got sample TODO: remove debug
-
-//   reading=read_val();
+    IADC_command(IADC0, iadcCmdStartSingle);
+    DebugPin_SetLow();  // TODO: remove debug
     reading = ADC_wait_for_val();
 
-    IADC_reset(IADC0);  // Needed to reduce power consumption
-
-    /* Disable Clock for Low current*/
-    Stop_ADC();
-
-    sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
 
 #if USE_UART == 1u
 #if NO_GUI == 0U

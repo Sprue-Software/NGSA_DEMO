@@ -18,6 +18,7 @@ sl_hfxo_manager_config.h=415033866
 sl_memory_config.h=687128566
 sl_mx25_flash_shutdown_eusart_config.h=179470237
 sl_power_manager_config.h=-1475773310
+sl_pwm_init_Enable_config.h=-680479407
 sl_simple_led_led0_config.h=908622594
 sl_sleeptimer_config.h=-1879962229
 sl_spidrv_SPI1_config.h=305962890

@@ -165,7 +165,9 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
   DebugPin_SetLow();  // Got sample TODO: remove debug setup
 
   CMU_ClockEnable(cmuClock_TIMER0, true);
-
+  CMU_ClockEnable(cmuClock_IADC0, true);
+  CMU_ClockEnable(cmuClock_GPIO, true);
+  initIADC ();
   /* Blocking Thread*/
   do {
 

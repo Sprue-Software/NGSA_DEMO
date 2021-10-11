@@ -48,7 +48,7 @@ void EnableCO(void)
 void DisableCO(void)
 {
 #if 1 // standard PIC version
-    SPI_Write(0x08, 0x34); //Register 4 - Turn off CO reference
+//    SPI_Write(0x08, 0x34); //Register 4 - Turn off CO reference
     SPI_Write(0x08, 0x14); // Register 4 - Turn off CO reference (not CO Amp)
     __delay_ms(10);
     SPI_Write(0x06, 0x80); //Register 3 - turn off the CO output stage - enable the tri-state
@@ -78,7 +78,7 @@ void DisableCO(void)
 
 void initCODetection(void)
 {
-    // RULES:
+    // Advised rules (but upset CO test!):
     // CO Amp should be ON all the time
     // CO OpAmp Tri-state should only be Enabled for CO Test (otherwise Tri-state disabled)
     // CO Ref only on when needed, to save power
@@ -140,12 +140,14 @@ uint16_t RunCOTest(void)
 
   SPI_Write(0x06, 0x80); //Register 3 - CO Output TriStated,sink, test OFF
   __delay_us(10);
+  // *** No Breakpoint Zone - to avoid damage DO NOT put breakpoint between here and end
   SPI_Write(0x06, 0xA0); //Register 3 - CO Output TriStated,sink, test ON
   __delay_ms(500);       // Charging time 500 ms seconds
 
   SPI_Write(0x06, 0x80); //Register 3 - CO Output TriStated,sink, test OFF
   __delay_us(50);
   SPI_Write(0x06, 0x00); //Register 3 - CO Output tristate OFF,sink, test OFF
+  // *** End of No Breakpoint Zone
   __delay_ms(1300); //Run CO amp for 1.3 seconds
 
 //  SPI_Write(0x00, 0x03); //Register 0 - Set ABUF to the CO sensor
