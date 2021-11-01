@@ -161,7 +161,7 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
   (void)&arg;
 
   /* Initialise AFE: reference Pawel's Code*/
-  // init_AEF(); // Ian's general Init
+  //init_AEF(); // Ian's general Init
   init_AEF_CO(); // Init for CO test
 
   DebugPin_SetLow();  // Got sample TODO: remove debug setup
@@ -211,14 +211,14 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
         if (smoke_ctr >= 10u)
         {
 #if SMOKE_ON == 1U
-
+            DebugPin_SetHigh();  // TODO: remove debug
             AFE_smoke_detection_ready_mode();
 //            Photo_Integrate(0x03u); /* blue(photo_1), gain=8, 100us of integration time */
 //            __delay_ms(1);
 
             Photo_Integrate(0x23u); /* IR(photo_2), gain=8, 100us of integration time */
             AFE_low_power_mode();
-
+            DebugPin_SetLow();  // TODO: remove debug
 #else
             HeartBeatOn();   // TODO: remove debug (heartbeat for AFE watchdog instead of smoke)
             __delay_ms(10);
@@ -266,9 +266,11 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
         {
             DebugPin_SetHigh();  // TODO: remove debug
             EnableCO();
+            DebugPin_SetLow();  // TODO: remove debug
         }
         else if (CO_sensing_ctr == 60u)
         {
+            DebugPin_SetHigh();  // TODO: remove debug
             readCO();
 
             DisableCO();
@@ -284,7 +286,8 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg)
 #endif /* CO_SENSING_ON */
 
 #if CO_TEST_ON == 1U
-        if (CO_test_ctr >= 181u)
+        //if (CO_test_ctr >= 181u)
+        if (CO_test_ctr >= 60u) // For get waweforms: Akif Akif, Original 181u.
         {
             DebugPin_SetLow();  // Got sample TODO: remove debug
             __delay_ms(10);      // TODO: remove debug separator
@@ -398,10 +401,6 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
    //  Register 5: WDHrn = 0, WDEn = 0, RdNow = 1, LBV = 1 (5.2V), HBV[2:1] = [00] (11.5V)
    SPI_Write(0x0A,0x11);
 
-   //  Register 4: RegSel = 0, RegEn = 0, BatSel = 1, COAEn = 1. COREn = 1, COCurPol = 0
-   //  Turn on CO op amp and CO reference voltage
-   SPI_Write(0x08,0x34);
-
    // Set zero the registers which are not related with CO.
    SPI_Write(0x0C,0x00);
    SPI_Write(0x0E,0x00);
@@ -415,6 +414,16 @@ static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
    // Register 3: HrnEn = 0, IOEn = 0, IOout = 0, RLEn = 0, COTest = 0, COCurSel = 0, COTri = 0
    // Turn the CO op-amp output.
    SPI_Write (0x06, 0x00);
+
+   //  Register 4: RegSel = 0, RegEn = 0, BatSel = 1, COAEn = 1. COREn = 0, COCurPol = 0
+   //  Turn on CO op amp
+   SPI_Write(0x08,0x14);
+   __delay_ms(10);
+
+   //  Register 4: RegSel = 0, RegEn = 0, BatSel = 1, COAEn = 1. COREn = 1, COCurPol = 0
+   //  Same as above plus enable CO reference voltage
+   SPI_Write(0x08,0x34);
+   __delay_ms(1);
  }
 
  /***************************************************************************//**
