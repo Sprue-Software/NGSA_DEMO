@@ -13,11 +13,11 @@
 
 // <o SL_DEVICE_INIT_LFXO_CTUNE> CTUNE <0-127>
 // <i> Default: 63
-#define SL_DEVICE_INIT_LFXO_CTUNE          38
+#define SL_DEVICE_INIT_LFXO_CTUNE          76
 
 // <o SL_DEVICE_INIT_LFXO_PRECISION> LFXO precision in PPM <0-65535>
 // <i> Default: 500
-#define SL_DEVICE_INIT_LFXO_PRECISION      100
+#define SL_DEVICE_INIT_LFXO_PRECISION      10
 
 // <o SL_DEVICE_INIT_LFXO_TIMEOUT> Startup Timeout Delay
 // <i>

@@ -38,7 +38,8 @@
 #include "SmokeDetection.h"
 #include "CODetection.h"
 #include "buzzer.h"
-
+#include "em_cmu.h"
+#include "sl_device_init_lfxo_config.h"
 /*******************************************************************************
  *******************************   DEFINES   ***********************************
  ******************************************************************************/
@@ -100,6 +101,17 @@ static void NGSA_Diagnostic_task_using_sleep_timer(void *arg);
 static void on_timeout_Diagnostic(sl_sleeptimer_timer_handle_t *handle, void *data);
 static void my_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data);
 void transfer_callback(SPIDRV_HandleData_t *handle,Ecode_t transfer_status,int items_transferred);
+static void crystal_oscillator(void);
+
+#define BSP_CLK_LFXO_PRESENT                  (1)
+#define BSP_CLK_HFXO_PRESENT                  (0)
+#define BSP_CLK_LFXO_INIT                      CMU_LFXOINIT_DEFAULT
+#define BSP_CLK_LFXO_CTUNE                    (76U)
+#define BSP_CLK_LFXO_FREQ                     (32768U)
+
+#define CTUNE_FLASH_OFFSET            (0xF8u)   // offset of flash CTUNE area
+#define CTUNE_MIN                 (56u)   // ctune minimum value based on experiments
+#define CTUNE_MAX                       (96u)     // ctune maximum value based on experiments
 
 /*******************************************************************************
  **************************   GLOBAL FUNCTIONS   *******************************
@@ -108,9 +120,47 @@ void transfer_callback(SPIDRV_HandleData_t *handle,Ecode_t transfer_status,int i
 /***************************************************************************//**
  * Initialize NGSA task.
  ******************************************************************************/
+static void crystal_oscillator(void)
+{
+  uint8_t ctune_val = 0u;
+
+  LFXO->CTRL |= LFXO_CTRL_FORCEEN; // forcefully enable the LFXO
+
+  while((LFXO->STATUS & LFXO_STATUS_RDY) != LFXO_STATUS_RDY); // wait for the oscillator to enable and be ready
+
+  GPIO_PinModeSet(gpioPortD, 4, gpioModePushPull, 0); // configure PD04 as output with pushpull mode
+
+  CMU_ClkOutPinConfig(0, cmuSelect_LFXO, 1, gpioPortD, 4u ); // route the clock to output pin
+
+
+#if 0
+  while(CMU->SYNCBUSY & CMU_SYNCBUSY_LFXOBSY){
+    /* Wait until LFXO not busy and is ready for the configuration */
+  }
+
+  CMU_LFXOInit_TypeDef lfxoInit = BSP_CLK_LFXO_INIT; /* GAIN =2; TIMEOUT=7; MODE=crystal_Oscillator*/
+
+  {
+    ctune_val = BSP_CLK_LFXO_CTUNE;  //  flash read failed. Hence replace with default value
+  }
+
+  lfxoInit.ctune = ctune_val;
+  CMU_LFXOInit(&lfxoInit); /* Initialise the LFXO crystal oscillator timer source */
+  CMU_OscillatorEnable(cmuOsc_LFXO, true, true);
+  while ((CMU->STATUS & CMU_STATUS_LFXORDY) != CMU_STATUS_LFXORDY); /* wait until the oscillator is ready */
+
+  GPIO_PinModeSet(gpioPortD, 4, gpioModePushPull, 0); // configure PD04 as output with pushpull mode
+  CMU->CTRL |= CMU_CTRL_CLKOUTSEL0_LFXO;
+  CMU->ROUTELOC0 = CMU_ROUTELOC0_CLKOUT0LOC_LOC0;
+  CMU->ROUTEPEN |= CMU_ROUTEPEN_CLKOUT0PEN;
+#endif
+}
+
 void NGSA_SYS_INIT(void)
 {
   RTOS_ERR err;
+
+  crystal_oscillator();
 
   /* Create NGSA Task*/
   OSTaskCreate(&tcb,
